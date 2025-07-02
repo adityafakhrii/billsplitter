@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useMemo, useRef, type ChangeEvent } from "react";
@@ -41,13 +42,12 @@ export function BillSplitter() {
 
   const formatRupiah = (amount: number) => {
     if (isNaN(amount)) return "Rp 0";
-    // Using id-ID locale formats numbers correctly for Indonesian Rupiah
-    // (e.g., 10000 becomes 10.000) and uses a comma for the decimal separator.
-    const formatter = new Intl.NumberFormat("id-ID", {
-        style: 'decimal',
-        maximumFractionDigits: 20, // Use a high number to avoid rounding
-    });
-    return `Rp ${formatter.format(amount)}`;
+    const [integerPart, decimalPart] = String(amount).split('.');
+    const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    if (decimalPart) {
+      return `Rp ${formattedIntegerPart},${decimalPart}`;
+    }
+    return `Rp ${formattedIntegerPart}`;
   };
 
   const getInitials = (name: string) => {
