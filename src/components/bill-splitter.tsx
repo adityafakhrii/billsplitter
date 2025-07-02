@@ -43,25 +43,20 @@ export function BillSplitter() {
   const formatRupiah = (amount: number) => {
     if (isNaN(amount)) return "Rp0";
 
-    // Round to 3 decimal places as requested, which might be needed for split bills.
     const fixedAmount = amount.toFixed(3);
     
     let [integerPart, decimalPart] = fixedAmount.split('.');
 
-    // Format the integer part with dots as thousands separators
     const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     
-    // Clean up decimal part: remove trailing zeros
     if (decimalPart) {
       decimalPart = decimalPart.replace(/0+$/, '');
     }
 
-    // If there's a decimal part left, combine with a comma
     if (decimalPart && decimalPart.length > 0) {
       return `Rp${formattedIntegerPart},${decimalPart}`;
     }
     
-    // Otherwise, just return the integer part
     return `Rp${formattedIntegerPart}`;
   };
 
@@ -85,7 +80,7 @@ export function BillSplitter() {
     reader.readAsDataURL(file);
     reader.onload = async () => {
       const base64 = reader.result as string;
-      setReceiptImage(base64); // For preview
+      setReceiptImage(base64);
       const result = await processReceipt(base64);
 
       if (result.error || !result.data) {
@@ -94,24 +89,19 @@ export function BillSplitter() {
           title: "Waduh, Error Gengs!",
           description: result.error,
         });
-        setReceiptImage(null); // Clear image on error
+        setReceiptImage(null);
       } else {
         const itemsWithId = result.data.items.map((item) => ({
           ...item,
           id: `item-${Date.now()}-${Math.random()}`,
-          name: item.item, // Aligning name from the flow
           assignedTo: [],
         }));
         
-        const subtotal = itemsWithId.reduce((acc, item) => acc + item.price, 0);
-        const tax = subtotal * 0.10; // Hitung pajak 10%
-        const total = subtotal + tax;
-
         const billData: Bill = {
           items: itemsWithId,
-          subtotal: subtotal,
-          tax: tax,
-          total: total,
+          subtotal: result.data.subtotal,
+          tax: result.data.tax,
+          total: result.data.total,
         };
         setBill(billData);
       }

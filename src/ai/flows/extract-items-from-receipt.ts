@@ -23,20 +23,20 @@ export type ExtractItemsFromReceiptInput = z.infer<typeof ExtractItemsFromReceip
 const ReceiptItemSchema = z.object({
   item: z.string().describe('The name of the item.'),
   quantity: z.number().describe('The quantity of the item.'),
-  price: z.number().describe('The total price for the quantity of this item.'),
+  price: z.string().describe('The total price for the quantity of this item, as a string without "Rp".'),
 });
 
 const ExtractItemsFromReceiptOutputSchema = z.object({
   items: z.array(ReceiptItemSchema),
   subtotal: z
-    .number()
+    .string()
     .optional()
-    .describe('The subtotal of all items before tax and other charges.'),
+    .describe('The subtotal of all items before tax and other charges, as a string without "Rp".'),
   tax: z
-    .number()
+    .string()
     .optional()
-    .describe('The total tax amount (e.g., PPN, PB1).'),
-  total: z.number().describe('The final total amount on the receipt.'),
+    .describe('The total tax amount (e.g., PPN, PB1), as a string without "Rp".'),
+  total: z.string().describe('The final total amount on the receipt, as a string without "Rp".'),
 });
 export type ExtractItemsFromReceiptOutput = z.infer<typeof ExtractItemsFromReceiptOutputSchema>;
 
@@ -60,7 +60,7 @@ Using the receipt image, identify the following:
 
 Return a JSON object with the fields 'items', 'subtotal', 'tax', and 'total'. The 'items' field should be an array of objects, where each object has 'item', 'quantity', and 'price' fields. If a value is not present on the receipt (like subtotal or tax), you can omit it. The total amount is mandatory.
 
-Important: All monetary values (price, subtotal, tax, total) must be returned as pure JSON numbers, without currency symbols or thousands separators. Use a period (.) as the decimal separator. For example, a value of "Rp 15.000,50" must be returned as the number 15000.50.
+Important: All monetary values (price, subtotal, tax, total) must be returned as JSON strings, exactly as they appear on the receipt but without the "Rp" prefix. For example, a value of "15.000,50" must be returned as the string "15.000,50". A value of "88.000" must be returned as "88.000".
 
 Receipt Image: {{media url=receiptDataUri}}
 `,
