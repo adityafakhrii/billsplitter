@@ -43,19 +43,9 @@ export function BillSplitter() {
   const formatRupiah = (amount: number) => {
     if (isNaN(amount)) return "Rp0";
 
-    const fixedAmount = amount.toFixed(3);
+    const roundedAmount = Math.round(amount);
     
-    let [integerPart, decimalPart] = fixedAmount.split('.');
-
-    const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    
-    if (decimalPart) {
-      decimalPart = decimalPart.replace(/0+$/, '');
-    }
-
-    if (decimalPart && decimalPart.length > 0) {
-      return `Rp${formattedIntegerPart},${decimalPart}`;
-    }
+    const formattedIntegerPart = roundedAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     
     return `Rp${formattedIntegerPart}`;
   };
@@ -229,7 +219,7 @@ export function BillSplitter() {
                   <Input type="file" accept="image/*" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
                   <Input type="file" accept="image/*" capture="environment" ref={cameraInputRef} onChange={handleFileChange} className="hidden" />
                   <Button size="lg" onClick={() => fileInputRef.current?.click()}>
-                    <Users className="mr-2 h-5 w-5" /> Upload Gambar
+                    <FileImage className="mr-2 h-5 w-5" /> Upload Gambar
                   </Button>
                   <Button size="lg" variant="secondary" onClick={() => cameraInputRef.current?.click()}>
                     <Camera className="mr-2 h-5 w-5" /> Pake Kamera
@@ -418,7 +408,7 @@ export function BillSplitter() {
                                 ))}
                                 {result.taxShare > 0 && (
                                     <li className="flex justify-between">
-                                        <span>Pajak (antehan)</span>
+                                        <span>Pajak</span>
                                         <span>{formatRupiah(result.taxShare)}</span>
                                     </li>
                                 )}
