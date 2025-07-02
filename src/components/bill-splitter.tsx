@@ -42,12 +42,17 @@ export function BillSplitter() {
 
   const formatRupiah = (amount: number) => {
     if (isNaN(amount)) return "Rp 0";
-    const [integerPart, decimalPart] = String(amount).split('.');
+    // Use toFixed(3) as requested, this also rounds which is generally desired for currency.
+    const fixedAmount = Number(amount).toFixed(3);
+    const [integerPart, decimalPart] = fixedAmount.split('.');
     const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    if (decimalPart) {
-      return `Rp ${formattedIntegerPart},${decimalPart}`;
+    
+    // Don't show decimal part if it's all zeros.
+    if (decimalPart === '000') {
+        return `Rp ${formattedIntegerPart}`;
     }
-    return `Rp ${formattedIntegerPart}`;
+
+    return `Rp ${formattedIntegerPart},${decimalPart}`;
   };
 
   const getInitials = (name: string) => {
