@@ -41,18 +41,28 @@ export function BillSplitter() {
   const cameraInputRef = useRef<HTMLInputElement>(null);
 
   const formatRupiah = (amount: number) => {
-    if (isNaN(amount)) return "Rp 0";
-    // Use toFixed(3) as requested, this also rounds which is generally desired for currency.
-    const fixedAmount = Number(amount).toFixed(3);
-    const [integerPart, decimalPart] = fixedAmount.split('.');
+    if (isNaN(amount)) return "Rp0";
+
+    // Round to 3 decimal places as requested, which might be needed for split bills.
+    const fixedAmount = amount.toFixed(3);
+    
+    let [integerPart, decimalPart] = fixedAmount.split('.');
+
+    // Format the integer part with dots as thousands separators
     const formattedIntegerPart = integerPart.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     
-    // Don't show decimal part if it's all zeros.
-    if (decimalPart === '000') {
-        return `Rp ${formattedIntegerPart}`;
+    // Clean up decimal part: remove trailing zeros
+    if (decimalPart) {
+      decimalPart = decimalPart.replace(/0+$/, '');
     }
 
-    return `Rp ${formattedIntegerPart},${decimalPart}`;
+    // If there's a decimal part left, combine with a comma
+    if (decimalPart && decimalPart.length > 0) {
+      return `Rp${formattedIntegerPart},${decimalPart}`;
+    }
+    
+    // Otherwise, just return the integer part
+    return `Rp${formattedIntegerPart}`;
   };
 
   const getInitials = (name: string) => {
