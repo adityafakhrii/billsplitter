@@ -5,8 +5,6 @@ import {
   Camera,
   Loader2,
   Plus,
-  ReceiptText,
-  Trash2,
   Users,
   X,
   FileImage,
@@ -28,6 +26,7 @@ import { useToast } from "@/hooks/use-toast";
 import { processReceipt } from "@/lib/actions";
 import type { Item, Participant, Bill, BillResult } from "@/types";
 import { Separator } from "./ui/separator";
+import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "./ui/table";
 
 
 export function BillSplitter() {
@@ -41,10 +40,16 @@ export function BillSplitter() {
   const cameraInputRef = useRef<HTMLInputElement>(null);
 
   const formatRupiah = (amount: number) => {
-    return new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-    }).format(amount);
+    if (isNaN(amount)) return "Rp 0";
+    // Using 'decimal' style to avoid currency-specific rounding rules.
+    // We can manually prepend the currency symbol.
+    // This gives us control over fraction digits.
+    const formatter = new Intl.NumberFormat("id-ID", {
+        style: 'decimal',
+        // Set a high maximum to prevent rounding of intermediate calculations.
+        maximumFractionDigits: 10, 
+    });
+    return `Rp ${formatter.format(amount)}`;
   };
 
   const getInitials = (name: string) => {
@@ -83,6 +88,7 @@ export function BillSplitter() {
           items: result.data.items.map((item) => ({
             ...item,
             id: `item-${Date.now()}-${Math.random()}`,
+            name: item.item, // Aligning name from the flow
             assignedTo: [],
           })),
         };
@@ -232,6 +238,53 @@ export function BillSplitter() {
               </CardContent>
             </Card>
           )}
+
+          {bill && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Rincian Struk</CardTitle>
+                <CardDescription>Ini detail dari struk yang di-scan, cek lagi ya.</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Item</TableHead>
+                      <TableHead className="text-center w-[50px]">Qty</TableHead>
+                      <TableHead className="text-right">Harga</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {bill.items.map((item) => (
+                      <TableRow key={item.id}>
+                        <TableCell className="font-medium">{item.name}</TableCell>
+                        <TableCell className="text-center">{item.quantity}</TableCell>
+                        <TableCell className="text-right">{formatRupiah(item.price)}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                  <TableFooter>
+                    {bill.subtotal != null && bill.subtotal > 0 && (
+                      <TableRow>
+                        <TableCell colSpan={2}>Subtotal</TableCell>
+                        <TableCell className="text-right font-medium">{formatRupiah(bill.subtotal)}</TableCell>
+                      </TableRow>
+                    )}
+                    {bill.tax != null && bill.tax > 0 && (
+                      <TableRow>
+                        <TableCell colSpan={2}>Pajak</TableCell>
+                        <TableCell className="text-right font-medium">{formatRupiah(bill.tax)}</TableCell>
+                      </TableRow>
+                    )}
+                    <TableRow className="text-base">
+                      <TableCell colSpan={2} className="font-bold">Total Belanja</TableCell>
+                      <TableCell className="text-right font-bold">{formatRupiah(bill.total)}</TableCell>
+                    </TableRow>
+                  </TableFooter>
+                </Table>
+              </CardContent>
+            </Card>
+          )}
         </aside>
 
         <main className="space-y-4 mt-8 md:mt-0">
@@ -368,7 +421,7 @@ export function BillSplitter() {
                    <CardFooter className="flex-col items-stretch gap-4">
                     <Separator />
                      <div className="flex justify-between font-bold text-lg">
-                        <span>Total Belanja</span>
+                        <span>Total Keseluruhan</span>
                         <span>{formatRupiah(bill.total)}</span>
                     </div>
                     <Button onClick={startOver} size="lg">
