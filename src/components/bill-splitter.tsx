@@ -88,11 +88,9 @@ export function BillSplitter() {
           assignedTo: [],
         }));
         
-        const calculatedSubtotal = itemsWithId.reduce((sum, item) => sum + item.price, 0);
-
         const billData: Bill = {
           items: itemsWithId,
-          subtotal: calculatedSubtotal, // Always recalculate subtotal from items
+          subtotal: result.data.subtotal,
           tax: result.data.tax,
           total: result.data.total,
         };
