@@ -29,7 +29,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
-import { processReceipt } from "@/lib/actions";
+import { processReceipt, validateReceiptPhotoAction } from "@/lib/actions";
 import type { Item, Participant, Bill, BillResult } from "@/types";
 import { Separator } from "./ui/separator";
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "./ui/table";
@@ -56,8 +56,7 @@ export function BillSplitter() {
 
   const formatRupiah = (amount: number) => {
     if (isNaN(amount)) return "Rp0";
-    const roundedAmount = Math.round(amount);
-    return `Rp${roundedAmount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
+    return `Rp${Math.round(amount).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
   };
 
   const getInitials = (name: string) => {
@@ -80,6 +79,22 @@ export function BillSplitter() {
     reader.readAsDataURL(file);
     reader.onload = async () => {
       const base64 = reader.result as string;
+
+      // 1. Validate if it's a receipt first
+      const validationResult = await validateReceiptPhotoAction(base64);
+
+      if (validationResult.error || !validationResult.data?.isReceipt) {
+        toast({
+          variant: "destructive",
+          title: "Ini Bukan Struk Deh Kayaknya",
+          description: validationResult.data?.reason || validationResult.error || "Coba upload foto struk yang bener, ya.",
+        });
+        setIsLoading(false);
+        if (event.target) event.target.value = "";
+        return; // Stop processing
+      }
+      
+      // 2. If valid, proceed to extract items
       setReceiptImage(base64);
       const result = await processReceipt(base64);
 
@@ -108,7 +123,7 @@ export function BillSplitter() {
       setIsLoading(false);
     };
 
-    event.target.value = "";
+    if (event.target) event.target.value = "";
   };
   
   const addParticipant = () => {

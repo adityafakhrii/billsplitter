@@ -8,6 +8,10 @@ import {
   validateProofPhoto,
   ValidateProofPhotoOutput,
 } from '@/ai/flows/validate-proof-photo';
+import {
+  validateReceiptPhoto,
+  ValidateReceiptPhotoOutput,
+} from '@/ai/flows/validate-receipt-photo';
 import type { Item } from '@/types';
 
 type ProcessedBill = {
@@ -113,6 +117,26 @@ export async function validateProofPhotoAction(
     return {
       data: null,
       error: 'Waduh, AI-nya lagi pusing. Gagal validasi foto, coba lagi nanti ya.',
+    };
+  }
+}
+
+
+export async function validateReceiptPhotoAction(
+  photoDataUri: string
+): Promise<{ data: ValidateReceiptPhotoOutput | null; error: string | null }> {
+  if (!photoDataUri) {
+    return { data: null, error: 'Fotonya mana, bestie? Upload dulu, dong.' };
+  }
+
+  try {
+    const result = await validateReceiptPhoto({ photoDataUri });
+    return { data: result, error: null };
+  } catch (e) {
+    console.error('Error validating receipt photo:', e);
+    return {
+      data: null,
+      error: 'Waduh, AI-nya lagi pusing. Gagal validasi foto struk, coba lagi nanti ya.',
     };
   }
 }
