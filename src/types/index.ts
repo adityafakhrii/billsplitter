@@ -29,3 +29,10 @@ export type BillResult = {
   }[];
   taxShare: number;
 };
+
+export type ManualParticipant = {
+  id: string;
+  name: string;
+  initials: string;
+  amount: number;
+};

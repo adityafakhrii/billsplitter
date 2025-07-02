@@ -1,10 +1,10 @@
 import Link from 'next/link';
-import { BillSplitter } from "@/components/bill-splitter";
+import { ManualSplitter } from "@/components/manual-splitter";
 import { ThemeToggle } from "@/components/theme-toggle";
-import { ReceiptText, Pencil } from "lucide-react";
+import { ReceiptText, ScanLine } from "lucide-react";
 import { Button } from '@/components/ui/button';
 
-export default function Home() {
+export default function ManualPage() {
   return (
     <div className="flex min-h-screen w-full flex-col">
       <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -16,10 +16,10 @@ export default function Home() {
             </h1>
           </div>
           <nav className="flex flex-1 items-center justify-end space-x-4">
-             <Link href="/manual" passHref>
+             <Link href="/" passHref>
               <Button variant="outline">
-                <Pencil className="mr-2 h-4 w-4" />
-                Input Manual
+                <ScanLine className="mr-2 h-4 w-4" />
+                Scan Struk
               </Button>
             </Link>
             <ThemeToggle />
@@ -27,7 +27,7 @@ export default function Home() {
         </div>
       </header>
       <main className="flex-1">
-        <BillSplitter />
+        <ManualSplitter />
       </main>
       <footer className="py-6 md:px-8 md:py-0">
         <div className="container flex flex-col items-center justify-center gap-4 md:h-24 md:flex-row">
