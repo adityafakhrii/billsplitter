@@ -3,8 +3,8 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
-  title: 'BillSplitter',
-  description: 'An intelligent app to split bills with friends.',
+  title: 'PatunganYuk',
+  description: 'Aplikasi cerdas buat patungan bill sama bestie.',
 };
 
 export default function RootLayout({

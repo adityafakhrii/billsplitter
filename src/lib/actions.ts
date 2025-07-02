@@ -4,17 +4,17 @@ import { extractItemsFromReceipt, ExtractItemsFromReceiptOutput } from "@/ai/flo
 
 export async function processReceipt(receiptDataUri: string): Promise<{ data: ExtractItemsFromReceiptOutput | null; error: string | null }> {
   if (!receiptDataUri) {
-    return { data: null, error: "No receipt image provided." };
+    return { data: null, error: "Ga ada struknya, bos. Upload dulu lah." };
   }
 
   try {
     const result = await extractItemsFromReceipt({ receiptDataUri });
-    if (!result || result.length === 0) {
-       return { data: null, error: "We couldn't find any items on this receipt. Please try a different image." };
+    if (!result || !result.items || result.items.length === 0) {
+       return { data: null, error: "Duh, AI-nya bingung nih. Gak nemu item di struk. Coba pake foto yang lebih jelas, kuy." };
     }
     return { data: result, error: null };
   } catch (e) {
     console.error("Error processing receipt:", e);
-    return { data: null, error: "Failed to read items from the receipt. The image might be unclear or the format is not supported. Please try again with a clearer image." };
+    return { data: null, error: "Gagal baca struknya nih. Fotonya burem kali atau formatnya aneh. Coba lagi pake foto yang lebih oke." };
   }
 }

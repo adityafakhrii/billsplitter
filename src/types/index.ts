@@ -7,9 +7,17 @@ export type Participant = {
 export type Item = {
   id: string;
   name: string;
+  quantity: number;
   price: number;
   assignedTo: string[]; // Array of participant IDs
 };
+
+export type Bill = {
+  items: Item[];
+  subtotal?: number;
+  tax?: number;
+  total: number;
+}
 
 export type BillResult = {
   participantId: string;
@@ -19,4 +27,5 @@ export type BillResult = {
     price: number;
     splitPrice: number;
   }[];
+  taxShare: number;
 };

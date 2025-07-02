@@ -1,9 +1,7 @@
-// This file is machine-generated - edit with care!
-
 'use server';
 
 /**
- * @fileOverview Extracts items and prices from a receipt image using AI.
+ * @fileOverview Extracts items, quantity, prices, and totals from a receipt image using AI.
  *
  * - extractItemsFromReceipt - A function that handles the item extraction process.
  * - ExtractItemsFromReceiptInput - The input type for the extractItemsFromReceipt function.
@@ -22,12 +20,24 @@ const ExtractItemsFromReceiptInputSchema = z.object({
 });
 export type ExtractItemsFromReceiptInput = z.infer<typeof ExtractItemsFromReceiptInputSchema>;
 
-const ExtractItemsFromReceiptOutputSchema = z.array(
-  z.object({
-    item: z.string().describe('The name of the item.'),
-    price: z.number().describe('The price of the item.'),
-  })
-);
+const ReceiptItemSchema = z.object({
+  item: z.string().describe('The name of the item.'),
+  quantity: z.number().describe('The quantity of the item.'),
+  price: z.number().describe('The total price for the quantity of this item.'),
+});
+
+const ExtractItemsFromReceiptOutputSchema = z.object({
+  items: z.array(ReceiptItemSchema),
+  subtotal: z
+    .number()
+    .optional()
+    .describe('The subtotal of all items before tax and other charges.'),
+  tax: z
+    .number()
+    .optional()
+    .describe('The total tax amount (e.g., PPN, PB1).'),
+  total: z.number().describe('The final total amount on the receipt.'),
+});
 export type ExtractItemsFromReceiptOutput = z.infer<typeof ExtractItemsFromReceiptOutputSchema>;
 
 export async function extractItemsFromReceipt(
@@ -40,11 +50,15 @@ const prompt = ai.definePrompt({
   name: 'extractItemsFromReceiptPrompt',
   input: {schema: ExtractItemsFromReceiptInputSchema},
   output: {schema: ExtractItemsFromReceiptOutputSchema},
-  prompt: `You are an expert receipt parser.
+  prompt: `You are an expert receipt parser. Your job is to extract detailed information from a receipt image in Indonesian Rupiah (Rp).
 
-You will use the receipt image to identify each item and its price.
+Using the receipt image, identify the following:
+1.  Each individual item, including its name, quantity, and total price for that line item.
+2.  The subtotal of all items.
+3.  The tax amount (often labeled as PPN or PB1).
+4.  The final total amount.
 
-Return a JSON array of objects, where each object has an "item" field and a "price" field.
+Return a JSON object with the fields 'items', 'subtotal', 'tax', and 'total'. The 'items' field should be an array of objects, where each object has 'item', 'quantity', and 'price' fields. If a value is not present on the receipt (like subtotal or tax), you can omit it. The total amount is mandatory.
 
 Receipt Image: {{media url=receiptDataUri}}
 `,
