@@ -58,3 +58,25 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
+
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+    -webkit-print-color-adjust: exact;
+  }
+  header, footer, .no-print {
+    display: none !important;
+  }
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .printable-area {
+    display: block !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 1.5rem !important;
+    margin: 0 !important;
+  }
+}

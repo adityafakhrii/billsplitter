@@ -12,11 +12,21 @@ export type Item = {
   assignedTo: string[]; // Array of participant IDs
 };
 
+export type ManualItem = {
+    id: string;
+    name: string;
+    quantity: number;
+    price: number; // This will be unit price
+};
+
 export type Bill = {
   items: Item[];
   subtotal?: number;
   tax?: number;
   total: number;
+  accountNumber?: string;
+  accountName?: string;
+  bankName?: string;
 }
 
 export type BillResult = {

@@ -4,6 +4,10 @@ import {
   extractItemsFromReceipt,
   ExtractItemsFromReceiptOutput as AIReceiptOutput,
 } from '@/ai/flows/extract-items-from-receipt';
+import {
+  validateProofPhoto,
+  ValidateProofPhotoOutput,
+} from '@/ai/flows/validate-proof-photo';
 import type { Item } from '@/types';
 
 type ProcessedBill = {
@@ -64,17 +68,16 @@ export async function processReceipt(
     const taxFromAI = parseRupiahString(resultFromAI.tax);
     const totalFromAI = parseRupiahString(resultFromAI.total);
 
+    // Prioritize calculated subtotal from items to ensure consistency
     const calculatedSubtotal = parsedItems.reduce(
       (acc, item) => acc + item.price,
       0
     );
 
-    // Prioritize AI-extracted values, but fall back to calculations if needed.
+    // Use AI values if they exist, otherwise use calculated/default values
     const finalSubtotal = subtotalFromAI > 0 ? subtotalFromAI : calculatedSubtotal;
-    const finalTax =
-      taxFromAI > 0 ? taxFromAI : Math.round(finalSubtotal * 0.1); // Calculate 10% tax if not found
-    const finalTotal =
-      totalFromAI > 0 ? totalFromAI : finalSubtotal + finalTax;
+    const finalTax = taxFromAI > 0 ? taxFromAI : 0; // Don't assume tax if not found
+    const finalTotal = totalFromAI > 0 ? totalFromAI : finalSubtotal + finalTax;
 
     const billData: ProcessedBill = {
       items: parsedItems,
@@ -90,6 +93,26 @@ export async function processReceipt(
       data: null,
       error:
         'Gagal baca struknya nih. Fotonya burem kali atau formatnya aneh. Coba lagi pake foto yang lebih oke.',
+    };
+  }
+}
+
+
+export async function validateProofPhotoAction(
+  photoDataUri: string
+): Promise<{ data: ValidateProofPhotoOutput | null; error: string | null }> {
+  if (!photoDataUri) {
+    return { data: null, error: 'Fotonya mana, bestie? Upload dulu, dong.' };
+  }
+
+  try {
+    const result = await validateProofPhoto({ photoDataUri });
+    return { data: result, error: null };
+  } catch (e) {
+    console.error('Error validating photo:', e);
+    return {
+      data: null,
+      error: 'Waduh, AI-nya lagi pusing. Gagal validasi foto, coba lagi nanti ya.',
     };
   }
 }
