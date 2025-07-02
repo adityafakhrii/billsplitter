@@ -88,11 +88,15 @@ export function BillSplitter() {
           assignedTo: [],
         }));
         
+        const subtotal = itemsWithId.reduce((acc, item) => acc + item.price, 0);
+        const tax = subtotal * 0.10; // Hitung pajak 10%
+        const total = subtotal + tax;
+
         const billData: Bill = {
           items: itemsWithId,
-          subtotal: result.data.subtotal,
-          tax: result.data.tax,
-          total: result.data.total,
+          subtotal: subtotal,
+          tax: tax,
+          total: total,
         };
         setBill(billData);
       }
