@@ -60,6 +60,8 @@ Using the receipt image, identify the following:
 
 Return a JSON object with the fields 'items', 'subtotal', 'tax', and 'total'. The 'items' field should be an array of objects, where each object has 'item', 'quantity', and 'price' fields. If a value is not present on the receipt (like subtotal or tax), you can omit it. The total amount is mandatory.
 
+Important: All monetary values (price, subtotal, tax, total) must be returned as pure JSON numbers, without currency symbols or thousands separators. Use a period (.) as the decimal separator. For example, a value of "Rp 15.000,50" must be returned as the number 15000.50.
+
 Receipt Image: {{media url=receiptDataUri}}
 `,
 });

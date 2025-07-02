@@ -41,13 +41,11 @@ export function BillSplitter() {
 
   const formatRupiah = (amount: number) => {
     if (isNaN(amount)) return "Rp 0";
-    // Using 'decimal' style to avoid currency-specific rounding rules.
-    // We can manually prepend the currency symbol.
-    // This gives us control over fraction digits.
+    // Using id-ID locale formats numbers correctly for Indonesian Rupiah
+    // (e.g., 10000 becomes 10.000) and uses a comma for the decimal separator.
     const formatter = new Intl.NumberFormat("id-ID", {
         style: 'decimal',
-        // Set a high maximum to prevent rounding of intermediate calculations.
-        maximumFractionDigits: 10, 
+        maximumFractionDigits: 20, // Use a high number to avoid rounding
     });
     return `Rp ${formatter.format(amount)}`;
   };
@@ -83,14 +81,20 @@ export function BillSplitter() {
         });
         setReceiptImage(null); // Clear image on error
       } else {
+        const itemsWithId = result.data.items.map((item) => ({
+          ...item,
+          id: `item-${Date.now()}-${Math.random()}`,
+          name: item.item, // Aligning name from the flow
+          assignedTo: [],
+        }));
+        
+        const calculatedSubtotal = itemsWithId.reduce((sum, item) => sum + item.price, 0);
+
         const billData: Bill = {
-          ...result.data,
-          items: result.data.items.map((item) => ({
-            ...item,
-            id: `item-${Date.now()}-${Math.random()}`,
-            name: item.item, // Aligning name from the flow
-            assignedTo: [],
-          })),
+          items: itemsWithId,
+          subtotal: calculatedSubtotal, // Always recalculate subtotal from items
+          tax: result.data.tax,
+          total: result.data.total,
         };
         setBill(billData);
       }
