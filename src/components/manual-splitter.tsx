@@ -19,7 +19,7 @@ import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 export function ManualSplitter() {
   const [items, setItems] = useState<ManualItem[]>([]);
   const [newItemName, setNewItemName] = useState("");
-  const [newItemQty, setNewItemQty] = useState(1);
+  const [newItemQty, setNewItemQty] = useState(0);
   const [newItemPrice, setNewItemPrice] = useState(0);
 
   const [storeName, setStoreName] = useState("");
@@ -59,7 +59,7 @@ export function ManualSplitter() {
       };
       setItems([...items, newItem]);
       setNewItemName("");
-      setNewItemQty(1);
+      setNewItemQty(0);
       setNewItemPrice(0);
     } else {
       toast({
@@ -69,6 +69,13 @@ export function ManualSplitter() {
       });
     }
   }
+
+  const handleAddItemOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addItem();
+    }
+  };
 
   const removeItem = (id: string) => {
     setItems(items.filter(item => item.id !== id));
@@ -286,9 +293,9 @@ export function ManualSplitter() {
                     <div className="space-y-4">
                         <Input placeholder="Nama Toko" value={storeName} onChange={(e) => setStoreName(e.target.value)} />
                         <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_2fr] gap-2 items-end">
-                            <Input placeholder="Nama item" value={newItemName} onChange={(e) => setNewItemName(e.target.value)} />
-                            <Input placeholder="Qty" type="number" value={newItemQty} onChange={(e) => setNewItemQty(parseInt(e.target.value) || 1)} min="1" />
-                            <Input placeholder="Harga satuan" type="number" value={newItemPrice > 0 ? newItemPrice : ""} onChange={(e) => setNewItemPrice(parseInt(e.target.value) || 0)} />
+                            <Input placeholder="Nama item" value={newItemName} onChange={(e) => setNewItemName(e.target.value)} onKeyDown={handleAddItemOnEnter} />
+                            <Input placeholder="Qty" type="number" value={newItemQty > 0 ? newItemQty : ""} onChange={(e) => setNewItemQty(parseInt(e.target.value) || 0)} onKeyDown={handleAddItemOnEnter} />
+                            <Input placeholder="Harga satuan" type="number" value={newItemPrice > 0 ? newItemPrice : ""} onChange={(e) => setNewItemPrice(parseInt(e.target.value) || 0)} onKeyDown={handleAddItemOnEnter} />
                             <Button onClick={addItem} className="md:col-span-3"><Plus className="h-4 w-4 mr-2" />Tambah Item</Button>
                         </div>
                     </div>
