@@ -11,7 +11,8 @@ import {
   FileImage,
   Pencil,
   Share2,
-  Printer
+  Printer,
+  AlertTriangle,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -41,6 +43,7 @@ export function BillSplitter() {
   const [newParticipantName, setNewParticipantName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [receiptImage, setReceiptImage] = useState<string | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
@@ -74,6 +77,7 @@ export function BillSplitter() {
     setIsLoading(true);
     setReceiptImage(null);
     setBill(null);
+    setValidationError(null);
 
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -84,11 +88,7 @@ export function BillSplitter() {
       const validationResult = await validateReceiptPhotoAction(base64);
 
       if (validationResult.error || !validationResult.data?.isReceipt) {
-        toast({
-          variant: "destructive",
-          title: "Ini Bukan Struk Deh Kayaknya",
-          description: validationResult.data?.reason || validationResult.error || "Coba upload foto struk yang bener, ya.",
-        });
+        setValidationError(validationResult.data?.reason || validationResult.error || "Coba upload foto struk yang bener, ya.");
         setIsLoading(false);
         if (event.target) event.target.value = "";
         return; // Stop processing
@@ -175,24 +175,34 @@ export function BillSplitter() {
 
   const handleSaveEdit = () => {
     if (!bill || !editingItem) return;
-
-    const newItems = bill.items.map(item => 
-      item.id === editingItem.id ? editingItem : item
+  
+    const parsedPrice = typeof editingItem.price === 'string' ? parseInt(editingItem.price.replace(/\D/g, '')) : editingItem.price;
+    const parsedQuantity = typeof editingItem.quantity === 'string' ? parseInt(editingItem.quantity) : editingItem.quantity;
+  
+    const updatedItem = {
+      ...editingItem,
+      price: isNaN(parsedPrice) ? 0 : parsedPrice,
+      quantity: isNaN(parsedQuantity) ? 0 : parsedQuantity,
+    };
+  
+    const newItems = bill.items.map(item =>
+      item.id === updatedItem.id ? updatedItem : item
     );
-    const newSubtotal = newItems.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-    const newTax = newSubtotal * 0.11; // Recalculate tax, assuming 11%
+  
+    const newSubtotal = newItems.reduce((acc, item) => acc + item.price, 0);
+    const newTax = bill.tax || 0;
     const newTotal = newSubtotal + newTax;
-
+  
     setBill({
       ...bill,
       items: newItems,
       subtotal: newSubtotal,
-      tax: newTax,
       total: newTotal
     });
+  
     setIsEditing(false);
     setEditingItem(null);
-  }
+  };
 
   const handleExport = () => {
     window.print();
@@ -284,6 +294,7 @@ export function BillSplitter() {
     setNewParticipantName("");
     setReceiptImage(null);
     setIsLoading(false);
+    setValidationError(null);
     setBankName("");
     setAccountNumber("");
     setAccountName("");
@@ -308,16 +319,25 @@ export function BillSplitter() {
                   <p className="text-muted-foreground">Lagi nyeken struk, sabar ye...</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                  <Input type="file" accept="image/*" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
-                  <Input type="file" accept="image/*" capture="environment" ref={cameraInputRef} onChange={handleFileChange} className="hidden" />
-                  <Button size="lg" onClick={() => fileInputRef.current?.click()}>
-                    <FileImage className="mr-2 h-5 w-5" /> Upload Gambar
-                  </Button>
-                  <Button size="lg" variant="secondary" onClick={() => cameraInputRef.current?.click()}>
-                    <Camera className="mr-2 h-5 w-5" /> Pake Kamera
-                  </Button>
-                </div>
+                <>
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <Input type="file" accept="image/*" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
+                    <Input type="file" accept="image/*" capture="environment" ref={cameraInputRef} onChange={handleFileChange} className="hidden" />
+                    <Button size="lg" onClick={() => fileInputRef.current?.click()}>
+                      <FileImage className="mr-2 h-5 w-5" /> Upload Gambar
+                    </Button>
+                    <Button size="lg" variant="secondary" onClick={() => cameraInputRef.current?.click()}>
+                      <Camera className="mr-2 h-5 w-5" /> Pake Kamera
+                    </Button>
+                  </div>
+                  {validationError && (
+                    <Alert variant="destructive" className="mt-4">
+                      <AlertTriangle className="h-4 w-4" />
+                      <AlertTitle>Foto Ditolak!</AlertTitle>
+                      <AlertDescription>{validationError}</AlertDescription>
+                    </Alert>
+                  )}
+                </>
               )}
             </CardContent>
           </Card>

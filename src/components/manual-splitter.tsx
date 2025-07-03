@@ -2,7 +2,7 @@
 "use client";
 
 import { useState, useMemo, useRef, type ChangeEvent } from "react";
-import { Plus, Trash2, X, Wallet, UploadCloud, PartyPopper, Loader2, Share2, Printer } from "lucide-react";
+import { Plus, Trash2, X, Wallet, UploadCloud, PartyPopper, Loader2, Share2, Printer, AlertTriangle } from "lucide-react";
 import type { ManualParticipant, ManualItem } from "@/types";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
@@ -22,6 +22,7 @@ export function ManualSplitter() {
   const [newItemQty, setNewItemQty] = useState(1);
   const [newItemPrice, setNewItemPrice] = useState(0);
 
+  const [storeName, setStoreName] = useState("");
   const [proofPhoto, setProofPhoto] = useState<string | null>(null);
   const [isPhotoValidating, setIsPhotoValidating] = useState(false);
   const [photoValidationError, setPhotoValidationError] = useState<string | null>(null);
@@ -96,7 +97,7 @@ export function ManualSplitter() {
         }
         setIsPhotoValidating(false);
     }
-    e.target.value = "";
+    if (e.target) e.target.value = "";
   }
 
   const handleSubmitItems = () => {
@@ -176,6 +177,7 @@ export function ManualSplitter() {
 
   const startOver = () => {
     setItems([]);
+    setStoreName("");
     setProofPhoto(null);
     setPhotoValidationError(null);
     setParticipants([]);
@@ -198,7 +200,7 @@ export function ManualSplitter() {
             <aside className="space-y-4 printable-area">
                 <Card>
                     <CardHeader className="items-center text-center">
-                        <CardTitle className="text-2xl">Struk Belanja Patungan</CardTitle>
+                        <CardTitle className="text-2xl">{storeName || "Struk Belanja Patungan"}</CardTitle>
                         <CardDescription>{formatSubmissionTime(submissionTime)}</CardDescription>
                     </CardHeader>
                     <CardContent>
@@ -277,15 +279,18 @@ export function ManualSplitter() {
           <aside className="space-y-4">
             <Card>
                 <CardHeader>
-                    <CardTitle>1. Masukin Item Belanjaan</CardTitle>
-                    <CardDescription>Satu-satu ya, biar gak ada yang kelewat.</CardDescription>
+                    <CardTitle>1. Masukin Info Belanja</CardTitle>
+                    <CardDescription>Isi nama toko dan item belanjaan satu-satu ya.</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_2fr] gap-2 items-end">
-                        <Input placeholder="Nama item" value={newItemName} onChange={(e) => setNewItemName(e.target.value)} />
-                        <Input placeholder="Qty" type="number" value={newItemQty} onChange={(e) => setNewItemQty(parseInt(e.target.value) || 1)} min="1" />
-                        <Input placeholder="Harga satuan" type="number" value={newItemPrice > 0 ? newItemPrice : ""} onChange={(e) => setNewItemPrice(parseInt(e.target.value) || 0)} />
-                        <Button onClick={addItem} className="md:col-span-3"><Plus className="h-4 w-4 mr-2" />Tambah Item</Button>
+                    <div className="space-y-4">
+                        <Input placeholder="Nama Toko" value={storeName} onChange={(e) => setStoreName(e.target.value)} />
+                        <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_2fr] gap-2 items-end">
+                            <Input placeholder="Nama item" value={newItemName} onChange={(e) => setNewItemName(e.target.value)} />
+                            <Input placeholder="Qty" type="number" value={newItemQty} onChange={(e) => setNewItemQty(parseInt(e.target.value) || 1)} min="1" />
+                            <Input placeholder="Harga satuan" type="number" value={newItemPrice > 0 ? newItemPrice : ""} onChange={(e) => setNewItemPrice(parseInt(e.target.value) || 0)} />
+                            <Button onClick={addItem} className="md:col-span-3"><Plus className="h-4 w-4 mr-2" />Tambah Item</Button>
+                        </div>
                     </div>
                 </CardContent>
             </Card>
@@ -306,7 +311,7 @@ export function ManualSplitter() {
                                 <span>{proofPhoto ? "Ganti Foto" : "Klik buat upload"}</span>
                             </div>
                         </Button>
-                        {photoValidationError && <Alert variant="destructive" className="mt-4"><AlertTitle>Foto Ditolak!</AlertTitle><AlertDescription>{photoValidationError}</AlertDescription></Alert>}
+                        {photoValidationError && <Alert variant="destructive" className="mt-4"><AlertTriangle className="h-4 w-4" /><AlertTitle>Foto Ditolak!</AlertTitle><AlertDescription>{photoValidationError}</AlertDescription></Alert>}
                         {proofPhoto && !photoValidationError && (
                             <div className="mt-4">
                                 <img src={proofPhoto} alt="Proof" className="rounded-lg w-full max-h-48 object-cover" />

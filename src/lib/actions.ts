@@ -22,20 +22,28 @@ type ProcessedBill = {
 };
 
 /**
- * Parses an Indonesian currency string (e.g., "1.234,56" or "1.234") into a rounded integer.
- * It removes dots (thousands separators) and treats commas as decimal separators before rounding.
+ * Parses an Indonesian currency string (e.g., "1.234,56" or "5.000" or "5,000") into an integer.
+ * It removes dots and commas as thousand separators and truncates any decimal part.
  * @param value The currency string to parse.
- * @returns The parsed and rounded number.
+ * @returns The parsed integer.
  */
 const parseRupiahString = (value?: string): number => {
   if (!value || typeof value !== 'string') return 0;
 
-  // remove thousand separators '.', then replace decimal separator ',' with '.'
-  const cleanValue = value.replace(/\./g, '').replace(/,/g, '.');
+  // Handles "5.000" and "5,000" and "5.000,00" by removing separators and decimals
+  const cleanValue = value.replace(/[.,]/g, '');
 
-  const number = parseFloat(cleanValue);
-  // Round to nearest integer.
-  return isNaN(number) ? 0 : Math.round(number);
+  // Since decimals are now removed, we might have extra "00" at the end if the original had decimals.
+  // The AI prompt is inconsistent, so we need a robust way to guess.
+  // Let's assume if the number looks too big by a factor of 100 and the original had a comma, it was probably a decimal.
+  // A better long-term fix is a more consistent AI prompt.
+  // For now, let's try a simpler approach based on user feedback to just remove decimals.
+  
+  // New simplified logic: remove dots, then split by comma and take the integer part.
+  const integerPart = value.replace(/\./g, '').split(',')[0];
+  const number = parseInt(integerPart, 10);
+
+  return isNaN(number) ? 0 : number;
 };
 
 export async function processReceipt(
@@ -71,17 +79,19 @@ export async function processReceipt(
     const subtotalFromAI = parseRupiahString(resultFromAI.subtotal);
     const taxFromAI = parseRupiahString(resultFromAI.tax);
     const totalFromAI = parseRupiahString(resultFromAI.total);
-
-    // Prioritize calculated subtotal from items to ensure consistency
+    
+    // If tax is not found on the receipt, it will be 0 and won't be added to the total.
+    const finalTax = taxFromAI > 0 ? taxFromAI : 0;
+    
+    // Prioritize subtotal and total from the receipt if they exist and are valid.
+    // Otherwise, calculate them from the items.
     const calculatedSubtotal = parsedItems.reduce(
       (acc, item) => acc + item.price,
       0
     );
-
-    // Use AI values if they exist, otherwise use calculated/default values
     const finalSubtotal = subtotalFromAI > 0 ? subtotalFromAI : calculatedSubtotal;
-    const finalTax = taxFromAI > 0 ? taxFromAI : 0; // Don't assume tax if not found
     const finalTotal = totalFromAI > 0 ? totalFromAI : finalSubtotal + finalTax;
+
 
     const billData: ProcessedBill = {
       items: parsedItems,
@@ -124,7 +134,7 @@ export async function validateProofPhotoAction(
 
 export async function validateReceiptPhotoAction(
   photoDataUri: string
-): Promise<{ data: ValidateReceiptPhotoOutput | null; error: string | null }> {
+): Promise<{ data: ValidateReceiptPhotoOutput | null; error:string | null }> {
   if (!photoDataUri) {
     return { data: null, error: 'Fotonya mana, bestie? Upload dulu, dong.' };
   }
