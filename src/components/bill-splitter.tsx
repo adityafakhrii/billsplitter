@@ -13,6 +13,7 @@ import {
   Share2,
   Printer,
   AlertTriangle,
+  Trash2,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -202,6 +203,18 @@ export function BillSplitter() {
   
     setIsEditing(false);
     setEditingItem(null);
+  };
+
+  const handleRemoveTax = () => {
+    if (!bill) return;
+
+    const newTotal = bill.subtotal || bill.items.reduce((acc, item) => acc + item.price, 0);
+
+    setBill({
+      ...bill,
+      tax: 0,
+      total: newTotal
+    });
   };
 
   const handleExport = () => {
@@ -419,8 +432,13 @@ export function BillSplitter() {
                     )}
                     {bill.tax != null && bill.tax > 0 && (
                       <TableRow>
-                        <TableCell colSpan={3}>Pajak</TableCell>
+                        <TableCell colSpan={2}>Pajak</TableCell>
                         <TableCell className="text-right font-medium">{formatRupiah(bill.tax)}</TableCell>
+                        <TableCell className="text-center">
+                          <Button variant="ghost" size="icon" onClick={handleRemoveTax}>
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </TableCell>
                       </TableRow>
                     )}
                     <TableRow className="text-base">
