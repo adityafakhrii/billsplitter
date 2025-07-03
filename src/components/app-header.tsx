@@ -2,8 +2,9 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
 import { ThemeToggle } from "@/components/theme-toggle";
-import { ReceiptText, Pencil, MoreVertical, ScanLine } from "lucide-react";
+import { ReceiptText, Pencil, MoreVertical, ScanLine, Moon, Sun } from "lucide-react";
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -15,6 +16,33 @@ import {
 export function AppHeader() {
   const pathname = usePathname();
   const isManualPage = pathname === '/manual';
+
+  // --- Theme logic ---
+  const [theme, setTheme] = useState<"light" | "dark" | null>(null);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const initialTheme = (savedTheme as "light" | "dark") || (systemPrefersDark ? "dark" : "light");
+    setTheme(initialTheme);
+  }, []);
+  
+  useEffect(() => {
+    if (theme) {
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      }
+    }
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme(currentTheme => (currentTheme === "light" ? "dark" : "light"));
+  };
+  // --- End Theme logic ---
 
   const desktopLink = isManualPage ? (
     <Link href="/" passHref>
@@ -61,7 +89,7 @@ export function AppHeader() {
           {/* Desktop Nav */}
           <nav className="hidden md:flex items-center space-x-4">
             {desktopLink}
-            <ThemeToggle />
+            <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
           </nav>
 
           {/* Mobile Nav */}
@@ -75,11 +103,9 @@ export function AppHeader() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 {mobileLink}
-                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                   <div className="flex items-center justify-between w-full">
-                      <span>Ganti Tema</span>
-                      <ThemeToggle />
-                    </div>
+                <DropdownMenuItem onSelect={toggleTheme}>
+                   {theme === 'dark' ? <Sun className="mr-2 h-4 w-4" /> : <Moon className="mr-2 h-4 w-4" />}
+                   <span>Ganti Tema</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
