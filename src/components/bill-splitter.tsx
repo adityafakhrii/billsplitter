@@ -535,7 +535,7 @@ export function BillSplitter() {
                                   <label htmlFor={`select-all-${item.id}`} className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">Semua</label>
                               </div>
                             </div>
-                            <div className="grid grid-cols-2 gap-2 mt-4">
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mt-4">
                               {participants.map((p) => (
                                 <div key={p.id} className="flex items-center space-x-2">
                                     <Checkbox id={`${item.id}-${p.id}`} checked={item.assignedTo.includes(p.id)} onCheckedChange={(c) => handleAssignmentChange(item.id, p.id, c)} />

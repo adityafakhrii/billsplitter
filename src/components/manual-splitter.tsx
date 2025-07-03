@@ -258,7 +258,7 @@ export function ManualSplitter() {
                                 <div key={p.id} className="flex items-center gap-3">
                                     <Avatar><AvatarFallback>{p.initials}</AvatarFallback></Avatar>
                                     <span className="font-medium flex-1">{p.name}</span>
-                                    <Input type="text" placeholder="Rp0" value={p.amount > 0 ? p.amount.toString() : ''} onChange={(e) => handleAmountChange(p.id, e.target.value)} className="w-32" />
+                                    <Input type="text" placeholder="Rp0" value={p.amount > 0 ? p.amount.toString() : ''} onChange={(e) => handleAmountChange(p.id, e.target.value)} className="w-28" />
                                     <Button variant="ghost" size="icon" onClick={() => removeParticipant(p.id)}><X className="h-4 w-4" /></Button>
                                 </div>
                                 ))}
