@@ -181,7 +181,7 @@ export function ManualSplitterResults({
                         {remainingBalance === 0 && totalBill > 0 && (
                             <div className="text-center text-sm font-medium text-green-600 p-2 rounded-md bg-green-100 dark:bg-green-900/50 flex items-center justify-center gap-2"><PartyPopper className="h-5 w-5"/>LUNAS! Mantap jiwa bestie.</div>
                         )}
-                        <div className="flex gap-2"><Button onClick={handleShare} size="lg" variant="outline" className="w-full"><Share2 className="mr-2" /> Share</Button><Button onClick={handleExport} size="lg" variant="outline" className="w-full"><Printer className="mr-2"/> Export PDF</Button></div>
+                        <div className="flex flex-col sm:flex-row gap-2"><Button onClick={handleShare} size="lg" variant="outline" className="w-full"><Share2 className="mr-2" /> Share</Button><Button onClick={handleExport} size="lg" variant="outline" className="w-full"><Printer className="mr-2"/> Export PDF</Button></div>
                         <Button onClick={onStartOver} size="lg" variant="destructive"><Trash2 className="h-4 w-4 mr-2" /> Reset Semua</Button>
                     </CardFooter>
                  </Card>

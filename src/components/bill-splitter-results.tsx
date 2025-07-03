@@ -96,7 +96,7 @@ export function BillSplitterResults({
                     <span>Total Keseluruhan</span>
                     <span>{formatRupiah(bill.total)}</span>
                 </div>
-                <div className="flex gap-2 no-print">
+                <div className="flex flex-col sm:flex-row gap-2 no-print">
                     <Button onClick={onShare} size="lg" variant="outline" className="w-full"><Share2 className="mr-2" /> Share</Button>
                     <Button onClick={onExport} size="lg" variant="outline" className="w-full"><Printer className="mr-2" /> Export PDF</Button>
                 </div>
