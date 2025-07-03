@@ -2,6 +2,7 @@
 "use client";
 
 import { useState, useMemo, useRef, type ChangeEvent } from "react";
+import dynamic from 'next/dynamic';
 import {
   Camera,
   Loader2,
@@ -36,6 +37,14 @@ import { processReceipt, validateReceiptPhotoAction } from "@/lib/actions";
 import type { Item, Participant, Bill, BillResult } from "@/types";
 import { Separator } from "./ui/separator";
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "./ui/table";
+
+const BillSplitterResults = dynamic(() =>
+  import('./bill-splitter-results').then((mod) => mod.BillSplitterResults),
+  { 
+    ssr: false,
+    loading: () => <div className="flex justify-center p-8"><Loader2 className="h-10 w-10 animate-spin" /></div> 
+  }
+);
 
 
 export function BillSplitter() {
@@ -553,73 +562,17 @@ export function BillSplitter() {
               )}
              
               {isAssignmentComplete && (
-                <Card className="printable-area">
-                  <CardHeader>
-                    <CardTitle>5. Rincian Patungan</CardTitle>
-                    <CardDescription className="no-print">Nih, totalan masing-masing. Cekidot!</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    {/* Bank Info for Print */}
-                    {accountName && (
-                        <div className="hidden print:block mb-4 p-4 border rounded-lg bg-secondary">
-                            <h3 className="font-bold mb-2">Info Transfer:</h3>
-                            <p><strong>Bank:</strong> {bankName}</p>
-                            <p><strong>No. Rekening:</strong> {accountNumber}</p>
-                            <p><strong>Atas Nama:</strong> {accountName}</p>
-                        </div>
-                    )}
-
-                    <Accordion type="single" collapsible className="w-full" defaultValue={`participant-${billResults[0]?.participantId}`}>
-                      {billResults.map((result) => {
-                        const participant = participants.find(p => p.id === result.participantId);
-                        if (!participant) return null;
-                        return (
-                          <AccordionItem value={`participant-${result.participantId}`} key={result.participantId}>
-                            <AccordionTrigger>
-                              <div className="flex justify-between w-full pr-4">
-                                  <div className="flex items-center gap-3">
-                                      <Avatar><AvatarFallback>{participant.initials}</AvatarFallback></Avatar>
-                                      <span className="font-semibold">{participant.name}</span>
-                                  </div>
-                                  <span className="font-bold text-primary text-lg">{formatRupiah(result.total)}</span>
-                              </div>
-                            </AccordionTrigger>
-                            <AccordionContent>
-                              <ul className="space-y-1 pl-4 text-muted-foreground text-sm">
-                                {result.items.map((item, index) => (
-                                  <li key={index} className="flex justify-between">
-                                    <span>{item.name} (patungan)</span>
-                                    <span>{formatRupiah(item.splitPrice)}</span>
-                                  </li>
-                                ))}
-                                {result.taxShare > 0 && (
-                                    <li className="flex justify-between">
-                                        <span>Pajak</span>
-                                        <span>{formatRupiah(result.taxShare)}</span>
-                                    </li>
-                                )}
-                              </ul>
-                            </AccordionContent>
-                          </AccordionItem>
-                        )
-                      })}
-                    </Accordion>
-                  </CardContent>
-                   <CardFooter className="flex-col items-stretch gap-4">
-                    <Separator />
-                     <div className="flex justify-between font-bold text-lg">
-                        <span>Total Keseluruhan</span>
-                        <span>{formatRupiah(bill.total)}</span>
-                    </div>
-                    <div className="flex gap-2 no-print">
-                      <Button onClick={handleShare} size="lg" variant="outline" className="w-full"><Share2 className="mr-2" /> Share</Button>
-                      <Button onClick={handleExport} size="lg" variant="outline" className="w-full"><Printer className="mr-2"/> Export PDF</Button>
-                    </div>
-                    <Button onClick={startOver} size="lg" className="no-print">
-                        <Plus className="h-4 w-4 mr-2" /> Itung Bill Baru
-                    </Button>
-                  </CardFooter>
-                </Card>
+                <BillSplitterResults
+                    bill={bill}
+                    participants={participants}
+                    billResults={billResults}
+                    accountName={accountName}
+                    accountNumber={accountNumber}
+                    bankName={bankName}
+                    onShare={handleShare}
+                    onExport={handleExport}
+                    onStartOver={startOver}
+                />
               )}
             </>
           )}
