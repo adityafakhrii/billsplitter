@@ -13,16 +13,16 @@ PatunganYuk adalah aplikasi pembagi tagihan cerdas yang dirancang untuk membuat 
 
 ## 🚀 Fitur Utama
 
--   **🤖 Scan Struk dengan AI**: Jepret foto strukmu, dan AI kami akan secara otomatis mengekstrak item, jumlah, harga, dan total.
--   **🖼️ Validasi Gambar Cerdas**: Aplikasi secara cerdas memverifikasi apakah gambar yang diunggah adalah struk yang valid (untuk pemindaian) atau bukti pembelian yang benar (untuk input manual), dan menolak gambar yang tidak relevan.
--   **✍️ Mode Input Manual**: Tidak punya struk? Tidak masalah. Tambahkan item, harga, dan jumlah secara manual dengan mudah.
--   **👥 Manajemen Peserta Fleksibel**: Tambah atau hapus teman yang ikut patungan dengan gampang.
--   **✅ Penentuan Item per Orang**: Tentukan setiap item untuk satu atau lebih peserta. Sempurna untuk hidangan individu maupun yang dibagi bersama.
--   **💸 Perhitungan Otomatis & Akurat**: Secara otomatis menghitung bagian setiap orang, dengan cerdas menangani pajak dan total.
--   **💳 Info Pembayaran**: Tambahkan detail rekening bank secara opsional ke ringkasan akhir untuk mempermudah transfer.
--   **📲 Bagikan & Ekspor**: Bagikan rincian akhir dengan teman-temanmu melalui aplikasi pesan apa pun atau ekspor PDF yang rapi untuk catatanmu.
--   **📱 Responsif & Mobile-First**: Didesain agar terlihat dan berfungsi dengan baik di perangkat apa pun, dari ponsel hingga desktop.
--   **🌙 Mode Terang & Gelap**: Beralih antara tema untuk kenyamanan melihat, baik siang maupun malam.
+-   **Scan Struk dengan AI**: Jepret foto strukmu, dan AI kami akan secara otomatis mengekstrak item, jumlah, harga, dan total.
+-   **Validasi Gambar Cerdas**: Aplikasi secara cerdas memverifikasi apakah gambar yang diunggah adalah struk yang valid (untuk pemindaian) atau bukti pembelian yang benar (untuk input manual), dan menolak gambar yang tidak relevan.
+-   **Mode Input Manual**: Tidak punya struk? Tidak masalah. Tambahkan item, harga, dan jumlah secara manual dengan mudah.
+-   **Manajemen Peserta Fleksibel**: Tambah atau hapus teman yang ikut patungan dengan gampang.
+-   **Penentuan Item per Orang**: Tentukan setiap item untuk satu atau lebih peserta. Sempurna untuk hidangan individu maupun yang dibagi bersama.
+-   **Perhitungan Otomatis & Akurat**: Secara otomatis menghitung bagian setiap orang, dengan cerdas menangani pajak dan total.
+-   **Info Pembayaran**: Tambahkan detail rekening bank secara opsional ke ringkasan akhir untuk mempermudah transfer.
+-   **Bagikan & Ekspor**: Bagikan rincian akhir dengan teman-temanmu melalui aplikasi pesan apa pun atau ekspor PDF yang rapi untuk catatanmu.
+-   **Responsif & Mobile-First**: Didesain agar terlihat dan berfungsi dengan baik di perangkat apa pun, dari ponsel hingga desktop.
+-   **Mode Terang & Gelap**: Beralih antara tema untuk kenyamanan melihat, baik siang maupun malam.
 
 ## 🛠️ Tumpukan Teknologi
 
