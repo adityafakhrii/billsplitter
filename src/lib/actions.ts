@@ -23,25 +23,32 @@ type ProcessedBill = {
 
 /**
  * Parses an Indonesian currency string (e.g., "1.234,56" or "5.000" or "5,000") into an integer.
- * It removes dots and commas as thousand separators and truncates any decimal part.
+ * It intelligently handles both dots and commas as potential thousands or decimal separators.
  * @param value The currency string to parse.
  * @returns The parsed integer.
  */
 const parseRupiahString = (value?: string): number => {
   if (!value || typeof value !== 'string') return 0;
 
-  // Handles "5.000" and "5,000" and "5.000,00" by removing separators and decimals
-  const cleanValue = value.replace(/[.,]/g, '');
+  let numberString = value;
 
-  // Since decimals are now removed, we might have extra "00" at the end if the original had decimals.
-  // The AI prompt is inconsistent, so we need a robust way to guess.
-  // Let's assume if the number looks too big by a factor of 100 and the original had a comma, it was probably a decimal.
-  // A better long-term fix is a more consistent AI prompt.
-  // For now, let's try a simpler approach based on user feedback to just remove decimals.
-  
-  // New simplified logic: remove dots, then split by comma and take the integer part.
-  const integerPart = value.replace(/\./g, '').split(',')[0];
-  const number = parseInt(integerPart, 10);
+  // Indonesian locale typically uses '.' for thousands and ',' for decimals.
+  // However, receipts can be inconsistent. A common pattern for decimals is a separator followed by 1 or 2 digits.
+  // Let's check if the last comma is likely a decimal separator.
+  const lastCommaIndex = numberString.lastIndexOf(',');
+  if (lastCommaIndex > -1) {
+      const decimalPart = numberString.substring(lastCommaIndex + 1);
+      if (decimalPart.length <= 2) {
+          // This looks like a decimal separator (e.g., ",00" or ",50").
+          // We'll take the part before it and ignore the decimals as per requirements.
+          numberString = numberString.substring(0, lastCommaIndex);
+      }
+  }
+
+  // Now, remove all remaining dots and commas, which should be thousands separators.
+  const cleanNumberString = numberString.replace(/[.,]/g, '');
+
+  const number = parseInt(cleanNumberString, 10);
 
   return isNaN(number) ? 0 : number;
 };
