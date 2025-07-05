@@ -213,10 +213,13 @@ export function BillSplitter() {
         return;
     }
 
-    const itemsWithId = manualItems.map((item) => ({
-        ...item,
+    const itemsWithId: Item[] = manualItems.map((item) => ({
+        name: item.name,
+        quantity: item.quantity,
         id: `item-${Date.now()}-${Math.random()}`,
         assignedTo: [],
+        unitPrice: item.price, // Store the unit price
+        price: item.price * item.quantity, // Calculate total price
     }));
 
     const subtotal = itemsWithId.reduce((acc, item) => acc + item.price, 0);
@@ -282,12 +285,14 @@ export function BillSplitter() {
   const handleSaveEdit = () => {
     if (!bill || !editingItem) return;
   
-    // Recalculate price based on quantity if needed, assuming price in modal is total price.
-    // For now, let's assume price is total for that item line.
-    const updatedItem = { ...editingItem };
+    const updatedItemFromState = { ...editingItem };
+    // If unitPrice was edited, recalculate the total price.
+    if (updatedItemFromState.unitPrice !== undefined) {
+      updatedItemFromState.price = updatedItemFromState.unitPrice * updatedItemFromState.quantity;
+    }
   
     const newItems = bill.items.map(item =>
-      item.id === updatedItem.id ? updatedItem : item
+      item.id === updatedItemFromState.id ? updatedItemFromState : item
     );
   
     // Recalculate totals
@@ -469,7 +474,7 @@ export function BillSplitter() {
                                 <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_2fr] gap-2 items-end">
                                     <Input placeholder="Nama item" value={newItemName} onChange={(e) => setNewItemName(e.target.value)} onKeyDown={handleAddItemOnEnter} />
                                     <Input placeholder="Qty" type="number" value={newItemQty} onChange={(e) => setNewItemQty(e.target.value)} onKeyDown={handleAddItemOnEnter} />
-                                    <Input placeholder="Total Harga" type="number" value={newItemPrice} onChange={(e) => setNewItemPrice(e.target.value)} onKeyDown={handleAddItemOnEnter} />
+                                    <Input placeholder="Harga Satuan" type="number" value={newItemPrice} onChange={(e) => setNewItemPrice(e.target.value)} onKeyDown={handleAddItemOnEnter} />
                                 </div>
                                 <Button onClick={addManualItem} className="w-full"><Plus className="mr-2"/>Tambah Item</Button>
                                 
@@ -487,7 +492,7 @@ export function BillSplitter() {
                                             {manualItems.map((item, index) => (
                                                 <TableRow key={index}>
                                                     <TableCell>{item.name} (x{item.quantity})</TableCell>
-                                                    <TableCell className="text-right">{formatRupiah(item.price)}</TableCell>
+                                                    <TableCell className="text-right">{formatRupiah(item.price * item.quantity)}</TableCell>
                                                     <TableCell>
                                                         <Button variant="ghost" size="icon" onClick={() => removeManualItem(index)}><Trash2 className="h-4 w-4" /></Button>
                                                     </TableCell>
@@ -550,7 +555,20 @@ export function BillSplitter() {
                         </div>
                         <div className="grid grid-cols-4 items-center gap-4">
                           <Label htmlFor="price" className="text-right">Harga</Label>
-                          <Input id="price" type="number" value={editingItem.price} onChange={(e) => setEditingItem({...editingItem, price: parseInt(e.target.value) || 0})} className="col-span-3" />
+                          <Input
+                            id="price"
+                            type="number"
+                            value={editingItem.unitPrice ?? editingItem.price}
+                            onChange={(e) => {
+                                const newPrice = parseInt(e.target.value) || 0;
+                                if (editingItem.unitPrice !== undefined) {
+                                    setEditingItem({...editingItem, unitPrice: newPrice });
+                                } else {
+                                    setEditingItem({...editingItem, price: newPrice });
+                                }
+                            }}
+                            className="col-span-3"
+                          />
                         </div>
                       </div>
                     )}
@@ -572,7 +590,14 @@ export function BillSplitter() {
                   <TableBody>
                     {bill.items.map((item) => (
                       <TableRow key={item.id}>
-                        <TableCell className="font-medium p-2 break-words">{item.name}</TableCell>
+                        <TableCell className="p-2 break-words">
+                            <p className="font-medium">{item.name}</p>
+                            {item.unitPrice && (
+                                <p className="text-xs text-muted-foreground">
+                                    {item.quantity} x {formatRupiah(item.unitPrice)}
+                                </p>
+                            )}
+                        </TableCell>
                         <TableCell className="text-center p-2">{item.quantity}</TableCell>
                         <TableCell className="text-right p-2 whitespace-nowrap">{formatRupiah(item.price)}</TableCell>
                         <TableCell className="p-1 text-center">

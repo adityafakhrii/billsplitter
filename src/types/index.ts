@@ -8,7 +8,8 @@ export type Item = {
   id: string;
   name: string;
   quantity: number;
-  price: number;
+  price: number; // Total price for the line item
+  unitPrice?: number; // Optional: unit price, useful for manual entries
   assignedTo: string[]; // Array of participant IDs
 };
 
