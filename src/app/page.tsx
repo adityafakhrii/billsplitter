@@ -14,7 +14,7 @@ export default function Home() {
         <div className="container flex flex-col items-center justify-center gap-4 md:h-24 md:flex-row">
             <div className="flex flex-col items-center gap-2">
               <p className="text-center text-sm leading-loose text-muted-foreground">
-                Bagi-bagi bill anti-ribet, biar nongkrong makin asik.
+                © {new Date().getFullYear()} PatunganYuk v1.2.0. Dibuat biar nongkrong makin asik.
               </p>
               <Link href="/changelog" className="text-xs text-muted-foreground hover:underline">
                 Riwayat Update

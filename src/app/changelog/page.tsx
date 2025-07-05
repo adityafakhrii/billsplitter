@@ -7,39 +7,25 @@ import Link from "next/link";
 export default function ChangelogPage() {
   const updates = [
     {
-      version: "v1.4.0",
-      date: "Sabtu, 06 Juli 2025",
-      changes: [
-        "Input Manual Makin Pro: Sekarang masukinnya harga satuan, bukan total. Biar makin detail & akurat!",
-        "Fitur Pajak di Input Manual: Mau nambahin pajak 10%? Centang aja, kelar.",
-        "'Enter' Jadi Shortcut: Gak perlu klik tombol lagi, `Enter` aja buat nambah item. Sat set!",
-      ],
-    },
-    {
-      version: "v1.3.0",
-      date: "Sabtu, 06 Juli 2025",
-      changes: [
-          "Dark Mode Makin Jelas: Alert merah sekarang terang benderang, gak bakal kelewat lagi.",
-          "Copywriting Makeover: Semua tulisan di-update jadi lebih Gen Z & asik.",
-          "Layout Makin Rapi: Tab di 'Kalkulator Patungan' udah bener posisinya & Qty defaultnya kosong.",
-      ],
-    },
-    {
       version: "v1.2.0",
       date: "Sabtu, 06 Juli 2025",
       changes: [
-          "REVOLUSI UI/UX: Sekarang ada tab 'Input Manual' di halaman utama & 'Scan Struk' di Kalkulator Patungan. Super fleksibel!",
-          "Fix Bug Kamera HP: Foto struk dari kamera sekarang anti-lemot, langsung ke-scan!",
-          "Tabel Anti-Geser: Rincian struk di HP sekarang pas di layar, gak perlu scroll kanan-kiri.",
+        "Input Manual Makin Pro: Sekarang input harga satuan, bukan total harga. Makin detail!",
+        "Fitur Pajak di Input Manual: Sekarang bisa nambahin pajak 10% secara opsional.",
+        "Enter jadi Shortcut: Gak perlu klik tombol, `Enter` aja buat nambah item. Sat set!",
+        "UI & UX Upgrade: Tampilan dirombak, copywriting di-makeover jadi lebih Gen Z, layout diperbaiki.",
+        "Fix Dark Mode: Peringatan gambar salah sekarang terang benderang, gak bakal kelewat lagi.",
+        "Fix Bug Kamera HP: Foto struk dari kamera sekarang anti-lemot, langsung ke-scan!",
+        "Tabel Anti-Geser: Rincian struk di HP sekarang pas di layar, gak perlu scroll kanan-kiri.",
       ],
     },
     {
       version: "v1.1.0",
       date: "Rabu, 03 Juli 2025",
       changes: [
-        "Performa NGEBUT: Aplikasi di-tuning, loading-nya sekarang lebih cepet dari pesenan dateng. Skor performa naik drastis!",
+        "Performa NGEBUT: Aplikasi di-tuning, loading-nya sekarang lebih cepet dari pesenan dateng.",
         "Fix Tampilan di HP: Tombol-tombol gak bakal nabrak-nabrak lagi di layar kecil.",
-        "Dokumentasi (README) di-update biar makin informatif.",
+        "Dokumentasi (README) di-update biar makin informatif & pake Bahasa Indonesia.",
       ],
     },
     {
@@ -87,7 +73,7 @@ export default function ChangelogPage() {
       <footer className="py-6 md:px-8 md:py-0">
         <div className="container flex flex-col items-center justify-center gap-4 md:h-24 md:flex-row">
             <p className="text-center text-sm leading-loose text-muted-foreground">
-              Bagi-bagi bill anti-ribet, biar nongkrong makin asik.
+                © {new Date().getFullYear()} PatunganYuk v1.2.0. Dibuat biar nongkrong makin asik.
             </p>
         </div>
       </footer>
