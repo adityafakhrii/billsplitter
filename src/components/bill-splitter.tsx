@@ -412,22 +412,22 @@ export function BillSplitter() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead>Item</TableHead>
-                      <TableHead className="text-center w-[50px]">Qty</TableHead>
-                      <TableHead className="text-right">Harga</TableHead>
-                      <TableHead className="text-center">Edit</TableHead>
+                      <TableHead className="px-2 py-3 w-full">Item</TableHead>
+                      <TableHead className="text-center px-1 py-3 w-[40px]">Qty</TableHead>
+                      <TableHead className="text-right px-2 py-3 w-[90px]">Harga</TableHead>
+                      <TableHead className="text-center px-1 py-3 w-[40px]">Edit</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {bill.items.map((item) => (
                       <TableRow key={item.id}>
-                        <TableCell className="font-medium">{item.name}</TableCell>
-                        <TableCell className="text-center">{item.quantity}</TableCell>
-                        <TableCell className="text-right">{formatRupiah(item.price)}</TableCell>
-                        <TableCell className="text-center">
-                            <Button variant="ghost" size="icon" onClick={() => { setEditingItem(item); setIsEditing(true); }}>
-                                <Pencil className="h-4 w-4" />
-                            </Button>
+                        <TableCell className="font-medium p-2 break-words">{item.name}</TableCell>
+                        <TableCell className="text-center p-2">{item.quantity}</TableCell>
+                        <TableCell className="text-right p-2 whitespace-nowrap">{formatRupiah(item.price)}</TableCell>
+                        <TableCell className="p-1 text-center">
+                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => { setEditingItem(item); setIsEditing(true); }}>
+                              <Pencil className="h-4 w-4" />
+                          </Button>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -435,24 +435,24 @@ export function BillSplitter() {
                   <TableFooter>
                     {bill.subtotal != null && bill.subtotal > 0 && (
                       <TableRow>
-                        <TableCell colSpan={3}>Subtotal</TableCell>
-                        <TableCell className="text-right font-medium">{formatRupiah(bill.subtotal)}</TableCell>
+                        <TableCell colSpan={3} className="p-2">Subtotal</TableCell>
+                        <TableCell className="text-right font-medium p-2 whitespace-nowrap">{formatRupiah(bill.subtotal)}</TableCell>
                       </TableRow>
                     )}
                     {bill.tax != null && bill.tax > 0 && (
                       <TableRow>
-                        <TableCell colSpan={2}>Pajak</TableCell>
-                        <TableCell className="text-right font-medium">{formatRupiah(bill.tax)}</TableCell>
-                        <TableCell className="text-center">
-                          <Button variant="ghost" size="icon" onClick={handleRemoveTax}>
+                        <TableCell colSpan={2} className="p-2">Pajak</TableCell>
+                        <TableCell className="text-right font-medium p-2 whitespace-nowrap">{formatRupiah(bill.tax)}</TableCell>
+                        <TableCell className="text-center p-1">
+                          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={handleRemoveTax}>
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </TableCell>
                       </TableRow>
                     )}
                     <TableRow className="text-base">
-                      <TableCell colSpan={3} className="font-bold">Total Belanja</TableCell>
-                      <TableCell className="text-right font-bold">{formatRupiah(bill.total)}</TableCell>
+                      <TableCell colSpan={3} className="font-bold p-2">Total Belanja</TableCell>
+                      <TableCell className="text-right font-bold p-2 whitespace-nowrap">{formatRupiah(bill.total)}</TableCell>
                     </TableRow>
                   </TableFooter>
                 </Table>
