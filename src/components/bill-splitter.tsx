@@ -191,6 +191,13 @@ export function BillSplitter() {
       setNewItemPrice("");
   };
 
+  const handleAddItemOnEnter = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      addManualItem();
+    }
+  };
+
   const removeManualItem = (index: number) => {
       setManualItems(manualItems.filter((_, i) => i !== index));
   };
@@ -456,9 +463,9 @@ export function BillSplitter() {
                         <TabsContent value="manual" className="pt-4">
                             <div className="space-y-4">
                                 <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_2fr] gap-2 items-end">
-                                    <Input placeholder="Nama item" value={newItemName} onChange={(e) => setNewItemName(e.target.value)} />
-                                    <Input placeholder="Qty" type="number" value={newItemQty} onChange={(e) => setNewItemQty(e.target.value)} />
-                                    <Input placeholder="Total Harga" type="number" value={newItemPrice} onChange={(e) => setNewItemPrice(e.target.value)} />
+                                    <Input placeholder="Nama item" value={newItemName} onChange={(e) => setNewItemName(e.target.value)} onKeyDown={handleAddItemOnEnter} />
+                                    <Input placeholder="Qty" type="number" value={newItemQty} onChange={(e) => setNewItemQty(e.target.value)} onKeyDown={handleAddItemOnEnter} />
+                                    <Input placeholder="Total Harga" type="number" value={newItemPrice} onChange={(e) => setNewItemPrice(e.target.value)} onKeyDown={handleAddItemOnEnter} />
                                 </div>
                                 <Button onClick={addManualItem} className="w-full"><Plus className="mr-2"/>Tambah Item</Button>
                                 
