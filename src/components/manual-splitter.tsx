@@ -63,8 +63,8 @@ const resizeImage = (file: File, maxWidth: number = 1024): Promise<string> => {
 export function CalculatorSplitter() {
   const [items, setItems] = useState<ManualItem[]>([]);
   const [newItemName, setNewItemName] = useState("");
-  const [newItemQty, setNewItemQty] = useState(1);
-  const [newItemPrice, setNewItemPrice] = useState(0);
+  const [newItemQty, setNewItemQty] = useState("");
+  const [newItemPrice, setNewItemPrice] = useState("");
 
   const [storeName, setStoreName] = useState("");
   const [proofPhoto, setProofPhoto] = useState<string | null>(null);
@@ -89,17 +89,20 @@ export function CalculatorSplitter() {
   };
 
   const addItem = () => {
-    if(newItemName.trim() && newItemQty > 0 && newItemPrice > 0) {
+    const quantity = parseInt(newItemQty) || 1;
+    const price = parseInt(newItemPrice) || 0;
+
+    if(newItemName.trim() && quantity > 0 && price > 0) {
       const newItem: ManualItem = {
         id: `manual-item-${Date.now()}`,
         name: newItemName.trim(),
-        quantity: newItemQty,
-        price: newItemPrice
+        quantity: quantity,
+        price: price
       };
       setItems([...items, newItem]);
       setNewItemName("");
-      setNewItemQty(1);
-      setNewItemPrice(0);
+      setNewItemQty("");
+      setNewItemPrice("");
     } else {
       toast({
         variant: "destructive",
@@ -267,8 +270,8 @@ export function CalculatorSplitter() {
                         <TabsContent value="manual" className="pt-4 space-y-4">
                             <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_2fr] gap-2 items-end">
                                 <Input placeholder="Nama item" value={newItemName} onChange={(e) => setNewItemName(e.target.value)} onKeyDown={handleAddItemOnEnter} />
-                                <Input placeholder="Qty" type="number" value={newItemQty} onChange={(e) => setNewItemQty(parseInt(e.target.value) || 1)} onKeyDown={handleAddItemOnEnter} />
-                                <Input placeholder="Harga satuan" type="number" value={newItemPrice > 0 ? newItemPrice : ""} onChange={(e) => setNewItemPrice(parseInt(e.target.value) || 0)} onKeyDown={handleAddItemOnEnter} />
+                                <Input placeholder="Qty" type="number" value={newItemQty} onChange={(e) => setNewItemQty(e.target.value)} onKeyDown={handleAddItemOnEnter} />
+                                <Input placeholder="Harga satuan" type="number" value={newItemPrice} onChange={(e) => setNewItemPrice(e.target.value)} onKeyDown={handleAddItemOnEnter} />
                                 <Button onClick={addItem} className="md:col-span-3"><Plus className="h-4 w-4 mr-2" />Tambah Item</Button>
                             </div>
                             <div>

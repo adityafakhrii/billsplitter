@@ -88,8 +88,8 @@ export function BillSplitter() {
   // State for manual entry
   const [manualItems, setManualItems] = useState<Omit<Item, 'id' | 'assignedTo'>[]>([]);
   const [newItemName, setNewItemName] = useState("");
-  const [newItemQty, setNewItemQty] = useState(1);
-  const [newItemPrice, setNewItemPrice] = useState(0);
+  const [newItemQty, setNewItemQty] = useState("");
+  const [newItemPrice, setNewItemPrice] = useState("");
 
   // State for editing items
   const [isEditing, setIsEditing] = useState(false);
@@ -174,7 +174,10 @@ export function BillSplitter() {
   };
 
   const addManualItem = () => {
-      if (!newItemName || newItemQty <= 0 || newItemPrice <= 0) {
+      const quantity = parseInt(newItemQty) || 1;
+      const price = parseInt(newItemPrice) || 0;
+
+      if (!newItemName || quantity <= 0 || price <= 0) {
           toast({
               variant: "destructive",
               title: "Data Item Belum Lengkap",
@@ -182,10 +185,10 @@ export function BillSplitter() {
           });
           return;
       }
-      setManualItems([...manualItems, { name: newItemName, quantity: newItemQty, price: newItemQty * newItemPrice }]);
+      setManualItems([...manualItems, { name: newItemName, quantity: quantity, price: price }]);
       setNewItemName("");
-      setNewItemQty(1);
-      setNewItemPrice(0);
+      setNewItemQty("");
+      setNewItemPrice("");
   };
 
   const removeManualItem = (index: number) => {
@@ -454,8 +457,8 @@ export function BillSplitter() {
                             <div className="space-y-4">
                                 <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_2fr] gap-2 items-end">
                                     <Input placeholder="Nama item" value={newItemName} onChange={(e) => setNewItemName(e.target.value)} />
-                                    <Input placeholder="Qty" type="number" value={newItemQty} onChange={(e) => setNewItemQty(parseInt(e.target.value) || 1)} />
-                                    <Input placeholder="Total Harga" type="number" value={newItemPrice > 0 ? newItemPrice : ""} onChange={(e) => setNewItemPrice(parseInt(e.target.value) || 0)} />
+                                    <Input placeholder="Qty" type="number" value={newItemQty} onChange={(e) => setNewItemQty(e.target.value)} />
+                                    <Input placeholder="Total Harga" type="number" value={newItemPrice} onChange={(e) => setNewItemPrice(e.target.value)} />
                                 </div>
                                 <Button onClick={addManualItem} className="w-full"><Plus className="mr-2"/>Tambah Item</Button>
                                 
