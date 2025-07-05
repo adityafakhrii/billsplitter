@@ -1,10 +1,11 @@
+
 "use client";
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { ThemeToggle } from "@/components/theme-toggle";
-import { ReceiptText, Pencil, MoreVertical, ScanLine, Moon, Sun } from "lucide-react";
+import { ReceiptText, Pencil, MoreVertical, ScanLine, Moon, Sun, Calculator } from "lucide-react";
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -21,6 +22,7 @@ export function AppHeader() {
   const [theme, setTheme] = useState<"light" | "dark" | null>(null);
 
   useEffect(() => {
+    // This effect runs once on mount to set the initial theme from localStorage or system preference.
     const savedTheme = localStorage.getItem("theme");
     const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
     const initialTheme = (savedTheme as "light" | "dark") || (systemPrefersDark ? "dark" : "light");
@@ -28,6 +30,7 @@ export function AppHeader() {
   }, []);
   
   useEffect(() => {
+    // This effect runs whenever the theme state changes to update the DOM and localStorage.
     if (theme) {
       if (theme === 'dark') {
         document.documentElement.classList.add('dark');
@@ -48,14 +51,14 @@ export function AppHeader() {
     <Link href="/" passHref>
       <Button variant="outline">
         <ScanLine className="mr-2 h-4 w-4" />
-        Scan Struk
+        Bagi per Item
       </Button>
     </Link>
   ) : (
     <Link href="/manual" passHref>
       <Button variant="outline">
-        <Pencil className="mr-2 h-4 w-4" />
-        Input Manual
+        <Calculator className="mr-2 h-4 w-4" />
+        Kalkulator Patungan
       </Button>
     </Link>
   );
@@ -64,14 +67,14 @@ export function AppHeader() {
     <DropdownMenuItem asChild>
       <Link href="/">
         <ScanLine className="mr-2 h-4 w-4" />
-        <span>Scan Struk</span>
+        <span>Bagi per Item</span>
       </Link>
     </DropdownMenuItem>
   ) : (
     <DropdownMenuItem asChild>
       <Link href="/manual">
-        <Pencil className="mr-2 h-4 w-4" />
-        <span>Input Manual</span>
+        <Calculator className="mr-2 h-4 w-4" />
+        <span>Kalkulator Patungan</span>
       </Link>
     </DropdownMenuItem>
   );
@@ -103,7 +106,7 @@ export function AppHeader() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 {mobileLink}
-                <DropdownMenuItem onSelect={toggleTheme}>
+                <DropdownMenuItem onSelect={(e) => { e.preventDefault(); toggleTheme(); }}>
                    {theme === 'dark' ? <Sun className="mr-2 h-4 w-4" /> : <Moon className="mr-2 h-4 w-4" />}
                    <span>Ganti Tema</span>
                 </DropdownMenuItem>

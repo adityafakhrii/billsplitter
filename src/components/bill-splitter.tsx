@@ -11,8 +11,6 @@ import {
   X,
   FileImage,
   Pencil,
-  Share2,
-  Printer,
   AlertTriangle,
   Trash2,
 } from "lucide-react";
@@ -22,12 +20,6 @@ import { Card, CardContent, CardHeader, CardTitle, CardFooter, CardDescription }
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
@@ -35,8 +27,8 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/hooks/use-toast";
 import { processReceipt, validateReceiptPhotoAction } from "@/lib/actions";
 import type { Item, Participant, Bill, BillResult } from "@/types";
-import { Separator } from "./ui/separator";
 import { Table, TableBody, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "./ui/table";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const BillSplitterResults = dynamic(() =>
   import('./bill-splitter-results').then((mod) => mod.BillSplitterResults),
@@ -92,6 +84,12 @@ export function BillSplitter() {
   const { toast } = useToast();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const cameraInputRef = useRef<HTMLInputElement>(null);
+
+  // State for manual entry
+  const [manualItems, setManualItems] = useState<Omit<Item, 'id' | 'assignedTo'>[]>([]);
+  const [newItemName, setNewItemName] = useState("");
+  const [newItemQty, setNewItemQty] = useState(1);
+  const [newItemPrice, setNewItemPrice] = useState(0);
 
   // State for editing items
   const [isEditing, setIsEditing] = useState(false);
@@ -174,6 +172,52 @@ export function BillSplitter() {
       }
     }
   };
+
+  const addManualItem = () => {
+      if (!newItemName || newItemQty <= 0 || newItemPrice <= 0) {
+          toast({
+              variant: "destructive",
+              title: "Data Item Belum Lengkap",
+              description: "Nama, Kuantitas, dan Harga harus diisi dengan benar.",
+          });
+          return;
+      }
+      setManualItems([...manualItems, { name: newItemName, quantity: newItemQty, price: newItemQty * newItemPrice }]);
+      setNewItemName("");
+      setNewItemQty(1);
+      setNewItemPrice(0);
+  };
+
+  const removeManualItem = (index: number) => {
+      setManualItems(manualItems.filter((_, i) => i !== index));
+  };
+
+  const processManualItems = () => {
+    if (manualItems.length === 0) {
+        toast({
+            variant: "destructive",
+            title: "Belum Ada Item",
+            description: "Tambahin dulu minimal satu item buat dihitung.",
+        });
+        return;
+    }
+
+    const itemsWithId = manualItems.map((item) => ({
+        ...item,
+        id: `item-${Date.now()}-${Math.random()}`,
+        assignedTo: [],
+    }));
+
+    const total = itemsWithId.reduce((acc, item) => acc + item.price, 0);
+
+    const billData: Bill = {
+        items: itemsWithId,
+        total: total,
+        subtotal: total,
+        tax: 0
+    };
+    setBill(billData);
+  };
   
   const addParticipant = () => {
     if (newParticipantName.trim()) {
@@ -225,19 +269,15 @@ export function BillSplitter() {
   const handleSaveEdit = () => {
     if (!bill || !editingItem) return;
   
-    const parsedPrice = typeof editingItem.price === 'string' ? parseInt(editingItem.price.replace(/\D/g, '')) : editingItem.price;
-    const parsedQuantity = typeof editingItem.quantity === 'string' ? parseInt(editingItem.quantity) : editingItem.quantity;
-  
-    const updatedItem = {
-      ...editingItem,
-      price: isNaN(parsedPrice) ? 0 : parsedPrice,
-      quantity: isNaN(parsedQuantity) ? 0 : parsedQuantity,
-    };
+    // Recalculate price based on quantity if needed, assuming price in modal is total price.
+    // For now, let's assume price is total for that item line.
+    const updatedItem = { ...editingItem };
   
     const newItems = bill.items.map(item =>
       item.id === updatedItem.id ? updatedItem : item
     );
   
+    // Recalculate totals
     const newSubtotal = newItems.reduce((acc, item) => acc + item.price, 0);
     const newTax = bill.tax || 0;
     const newTotal = newSubtotal + newTax;
@@ -359,6 +399,7 @@ export function BillSplitter() {
     setBankName("");
     setAccountNumber("");
     setAccountName("");
+    setManualItems([]);
   };
 
   const isAssignmentComplete = bill?.items.every(item => item.assignedTo.length > 0) ?? false;
@@ -368,40 +409,87 @@ export function BillSplitter() {
     <div className="container mx-auto p-4 md:py-8">
       <div className="grid grid-cols-1 md:grid-cols-2 md:gap-8">
         <aside className="space-y-4 no-print">
-          <Card>
-            <CardHeader>
-              <CardTitle>1. Upload Struk</CardTitle>
-              <CardDescription>Foto atau upload gambar struknya. Biar cepet.</CardDescription>
-            </CardHeader>
-            <CardContent>
-              {isLoading ? (
-                <div className="flex flex-col items-center justify-center gap-4 p-8">
-                  <Loader2 className="h-16 w-16 animate-spin text-primary" />
-                  <p className="text-muted-foreground">Lagi nyeken struk, sabar ye...</p>
-                </div>
-              ) : (
-                <>
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <Input type="file" accept="image/*" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
-                    <Input type="file" accept="image/*" capture="environment" ref={cameraInputRef} onChange={handleFileChange} className="hidden" />
-                    <Button size="lg" onClick={() => fileInputRef.current?.click()}>
-                      <FileImage className="mr-2 h-5 w-5" /> Upload Gambar
-                    </Button>
-                    <Button size="lg" variant="secondary" onClick={() => cameraInputRef.current?.click()}>
-                      <Camera className="mr-2 h-5 w-5" /> Pake Kamera
-                    </Button>
-                  </div>
-                  {validationError && (
-                    <Alert variant="destructive" className="mt-4">
-                      <AlertTriangle className="h-4 w-4" />
-                      <AlertTitle>Foto Ditolak!</AlertTitle>
-                      <AlertDescription>{validationError}</AlertDescription>
-                    </Alert>
-                  )}
-                </>
-              )}
-            </CardContent>
-          </Card>
+         
+         {!bill && (
+             <Card>
+                <CardHeader>
+                  <CardTitle>1. Masukin Rincian Belanja</CardTitle>
+                  <CardDescription>Bisa scan struk otomatis atau input manual satu-satu.</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Tabs defaultValue="scan" className="w-full">
+                        <TabsList className="grid w-full grid-cols-2">
+                            <TabsTrigger value="scan">Scan Struk</TabsTrigger>
+                            <TabsTrigger value="manual">Input Manual</TabsTrigger>
+                        </TabsList>
+                        <TabsContent value="scan" className="pt-4">
+                              {isLoading ? (
+                                <div className="flex flex-col items-center justify-center gap-4 p-8">
+                                  <Loader2 className="h-16 w-16 animate-spin text-primary" />
+                                  <p className="text-muted-foreground">Lagi nyeken struk, sabar ye...</p>
+                                </div>
+                              ) : (
+                                <>
+                                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                                    <Input type="file" accept="image/*" ref={fileInputRef} onChange={handleFileChange} className="hidden" />
+                                    <Input type="file" accept="image/*" capture="environment" ref={cameraInputRef} onChange={handleFileChange} className="hidden" />
+                                    <Button size="lg" onClick={() => fileInputRef.current?.click()}>
+                                      <FileImage className="mr-2 h-5 w-5" /> Upload Gambar
+                                    </Button>
+                                    <Button size="lg" variant="secondary" onClick={() => cameraInputRef.current?.click()}>
+                                      <Camera className="mr-2 h-5 w-5" /> Pake Kamera
+                                    </Button>
+                                  </div>
+                                  {validationError && (
+                                    <Alert variant="destructive" className="mt-4">
+                                      <AlertTriangle className="h-4 w-4" />
+                                      <AlertTitle>Foto Ditolak!</AlertTitle>
+                                      <AlertDescription>{validationError}</AlertDescription>
+                                    </Alert>
+                                  )}
+                                </>
+                              )}
+                        </TabsContent>
+                        <TabsContent value="manual" className="pt-4">
+                            <div className="space-y-4">
+                                <div className="grid grid-cols-1 md:grid-cols-[2fr_1fr_2fr] gap-2 items-end">
+                                    <Input placeholder="Nama item" value={newItemName} onChange={(e) => setNewItemName(e.target.value)} />
+                                    <Input placeholder="Qty" type="number" value={newItemQty} onChange={(e) => setNewItemQty(parseInt(e.target.value) || 1)} />
+                                    <Input placeholder="Total Harga" type="number" value={newItemPrice > 0 ? newItemPrice : ""} onChange={(e) => setNewItemPrice(parseInt(e.target.value) || 0)} />
+                                </div>
+                                <Button onClick={addManualItem} className="w-full"><Plus className="mr-2"/>Tambah Item</Button>
+                                
+                                {manualItems.length > 0 && (
+                                  <>
+                                    <Table>
+                                        <TableHeader>
+                                            <TableRow>
+                                                <TableHead>Item</TableHead>
+                                                <TableHead className="text-right">Harga</TableHead>
+                                                <TableHead className="w-[50px]"></TableHead>
+                                            </TableRow>
+                                        </TableHeader>
+                                        <TableBody>
+                                            {manualItems.map((item, index) => (
+                                                <TableRow key={index}>
+                                                    <TableCell>{item.name} (x{item.quantity})</TableCell>
+                                                    <TableCell className="text-right">{formatRupiah(item.price)}</TableCell>
+                                                    <TableCell>
+                                                        <Button variant="ghost" size="icon" onClick={() => removeManualItem(index)}><Trash2 className="h-4 w-4" /></Button>
+                                                    </TableCell>
+                                                </TableRow>
+                                            ))}
+                                        </TableBody>
+                                    </Table>
+                                    <Button onClick={processManualItems} size="lg" className="w-full">Proses & Lanjut</Button>
+                                  </>
+                                )}
+                            </div>
+                        </TabsContent>
+                    </Tabs>
+                </CardContent>
+             </Card>
+         )}
 
           {receiptImage && (
             <Card>
@@ -505,7 +593,7 @@ export function BillSplitter() {
             <Card className="flex flex-col items-center justify-center text-center p-8 h-full min-h-[300px] no-print">
                 <FileImage className="h-16 w-16 text-muted-foreground" />
                 <CardTitle className="mt-4">Hasilnya Nanti di Sini</CardTitle>
-                <CardDescription>Upload struk dulu, ntar detail patungannya muncul di sini.</CardDescription>
+                <CardDescription>Input data belanja dulu, ntar detail patungannya muncul di sini.</CardDescription>
             </Card>
           ) : (
             <>
