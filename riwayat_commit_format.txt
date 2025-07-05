@@ -1,12 +1,14 @@
-b7ece72 - Aditya Fakhri Riansyah, 3 minutes ago : di input manual di bagian halaman bagi per item, untuk input item itu bu
-cdb9a4b - Aditya Fakhri Riansyah, 11 minutes ago : di bagian input manual di halaman bagi per item, sebelum klik proses dan
-1dd0de1 - Aditya Fakhri Riansyah, 15 minutes ago : di halaman bagi per item di bagian input manual, harusnya bisa tekan ent
-799b7c4 - Aditya Fakhri Riansyah, 19 minutes ago : ketika dark mode aktif, peringatan untuk gambar struk yang salah ini kok
-cee40d1 - Aditya Fakhri Riansyah, 25 minutes ago : tulisan antara 'Hasilnya Nanti di Sini' dan 'Input data belanja dulu, nt
-50af0dd - Aditya Fakhri Riansyah, 35 minutes ago : di input manual, bagian qty jangan ada angka 1, tapi kosongkan saja biar
-e20ee32 - Aditya Fakhri Riansyah, 39 minutes ago : tambahin satu fitur lagi di halaman scan struk/upload struk, selain uplo
-796bc31 - Aditya Fakhri Riansyah, 61 minutes ago : fitur 'pake kamera' ketika saya coba di browser mobile langsung mengguna
-553dcc2 - Aditya Fakhri Riansyah, 67 minutes ago : di ukuran layar hp, rincian struk dan subtotal, pajak, total belanja ini
+1fe8951 - Aditya Fakhri Riansyah, 2 minutes ago : kalau tanggalnya sama mah jangan ditulis berulang, cukup 1x aja dan jela
+b49057b - Aditya Fakhri Riansyah, 6 minutes ago : pada halaman riwayat update coba dibenerin versi 1.0.0 itu  sampai versi
+b7ece72 - Aditya Fakhri Riansyah, 13 minutes ago : di input manual di bagian halaman bagi per item, untuk input item itu bu
+cdb9a4b - Aditya Fakhri Riansyah, 20 minutes ago : di bagian input manual di halaman bagi per item, sebelum klik proses dan
+1dd0de1 - Aditya Fakhri Riansyah, 25 minutes ago : di halaman bagi per item di bagian input manual, harusnya bisa tekan ent
+799b7c4 - Aditya Fakhri Riansyah, 28 minutes ago : ketika dark mode aktif, peringatan untuk gambar struk yang salah ini kok
+cee40d1 - Aditya Fakhri Riansyah, 35 minutes ago : tulisan antara 'Hasilnya Nanti di Sini' dan 'Input data belanja dulu, nt
+50af0dd - Aditya Fakhri Riansyah, 44 minutes ago : di input manual, bagian qty jangan ada angka 1, tapi kosongkan saja biar
+e20ee32 - Aditya Fakhri Riansyah, 48 minutes ago : tambahin satu fitur lagi di halaman scan struk/upload struk, selain uplo
+796bc31 - Aditya Fakhri Riansyah, 71 minutes ago : fitur 'pake kamera' ketika saya coba di browser mobile langsung mengguna
+553dcc2 - Aditya Fakhri Riansyah, 76 minutes ago : di ukuran layar hp, rincian struk dan subtotal, pajak, total belanja ini
 d806d46 - Aditya Fakhri Riansyah, 2 days ago : update readme: remove emoji icon
 b3a9032 - Aditya Fakhri Riansyah, 3 days ago : Update readme.md
 35a0a4b - Aditya Fakhri Riansyah, 3 days ago : button export PDF pada manual masih overflow nih di ukuran layar hp, cob

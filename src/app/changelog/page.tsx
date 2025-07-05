@@ -10,13 +10,13 @@ export default function ChangelogPage() {
       version: "v1.2.0",
       date: "Sabtu, 06 Juli 2025",
       changes: [
-        "Input Manual Makin Pro: Sekarang input harga satuan, bukan total harga. Makin detail!",
-        "Fitur Pajak di Input Manual: Sekarang bisa nambahin pajak 10% secara opsional.",
-        "Enter jadi Shortcut: Gak perlu klik tombol, `Enter` aja buat nambah item. Sat set!",
-        "UI & UX Upgrade: Tampilan dirombak, copywriting di-makeover jadi lebih Gen Z, layout diperbaiki.",
-        "Fix Dark Mode: Peringatan gambar salah sekarang terang benderang, gak bakal kelewat lagi.",
+        "Alur Baru: Fitur scan & input manual digabung pake tab di halaman utama & kalkulator. Makin fleksibel!",
+        "Input Manual Makin Pro: Sekarang input harga satuan (bukan total), bisa nambah pajak 10%, dan pake 'Enter' buat nambah item. Sat set!",
         "Fix Bug Kamera HP: Foto struk dari kamera sekarang anti-lemot, langsung ke-scan!",
         "Tabel Anti-Geser: Rincian struk di HP sekarang pas di layar, gak perlu scroll kanan-kiri.",
+        "UI & UX Level Up: Tampilan dirombak, copywriting di-makeover jadi lebih Gen Z, dan layout diperbaiki biar makin nyaman.",
+        "Fix Dark Mode: Peringatan gambar salah sekarang terang benderang, gak bakal kelewat lagi.",
+        "Halaman Riwayat Update: Lahirnya halaman ini (yang lagi lo baca!) yang di-makeover abis & footer sekarang jadi lebih pro!",
       ],
     },
     {
