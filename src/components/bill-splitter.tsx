@@ -90,6 +90,7 @@ export function BillSplitter() {
   const [newItemName, setNewItemName] = useState("");
   const [newItemQty, setNewItemQty] = useState("");
   const [newItemPrice, setNewItemPrice] = useState("");
+  const [addTaxManually, setAddTaxManually] = useState(false);
 
   // State for editing items
   const [isEditing, setIsEditing] = useState(false);
@@ -218,13 +219,15 @@ export function BillSplitter() {
         assignedTo: [],
     }));
 
-    const total = itemsWithId.reduce((acc, item) => acc + item.price, 0);
+    const subtotal = itemsWithId.reduce((acc, item) => acc + item.price, 0);
+    const tax = addTaxManually ? subtotal * 0.10 : 0;
+    const total = subtotal + tax;
 
     const billData: Bill = {
         items: itemsWithId,
+        subtotal: subtotal,
+        tax: tax,
         total: total,
-        subtotal: total,
-        tax: 0
     };
     setBill(billData);
   };
@@ -410,6 +413,7 @@ export function BillSplitter() {
     setAccountNumber("");
     setAccountName("");
     setManualItems([]);
+    setAddTaxManually(false);
   };
 
   const isAssignmentComplete = bill?.items.every(item => item.assignedTo.length > 0) ?? false;
@@ -491,6 +495,16 @@ export function BillSplitter() {
                                             ))}
                                         </TableBody>
                                     </Table>
+                                    <div className="flex items-center space-x-2 my-4">
+                                        <Checkbox
+                                            id="add-tax"
+                                            checked={addTaxManually}
+                                            onCheckedChange={(checked) => setAddTaxManually(checked as boolean)}
+                                        />
+                                        <Label htmlFor="add-tax" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                            Tambahin Pajak (10%)
+                                        </Label>
+                                    </div>
                                     <Button onClick={processManualItems} size="lg" className="w-full">Proses & Lanjut</Button>
                                   </>
                                 )}
