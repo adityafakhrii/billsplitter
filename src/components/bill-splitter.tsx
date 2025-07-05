@@ -128,7 +128,7 @@ export function BillSplitter() {
       const validationResult = await validateReceiptPhotoAction(base64);
 
       if (validationResult.error || !validationResult.data?.isReceipt) {
-        setValidationError(validationResult.data?.reason || validationResult.error || "Coba upload foto struk yang bener, ya.");
+        setValidationError(validationResult.data?.reason || validationResult.error || "Coba upload foto struk yang bener, ya, jangan foto selfie.");
         return;
       }
       
@@ -138,7 +138,7 @@ export function BillSplitter() {
       if (result.error || !result.data) {
         toast({
           variant: "destructive",
-          title: "Waduh, Error Gengs!",
+          title: "Waduh, Gagal Baca Struk!",
           description: result.error,
         });
         setReceiptImage(null);
@@ -161,10 +161,10 @@ export function BillSplitter() {
        console.error("Error processing image:", error);
         toast({
             variant: "destructive",
-            title: "Oops, Gagal Proses!",
-            description: "Gagal memproses gambar. Coba foto ulang atau pilih dari galeri.",
+            title: "Waduh, Gagal Proses!",
+            description: "Gagal proses gambar. Coba foto/pilih ulang, ya.",
         });
-        setValidationError("Gagal memproses gambar. Pastikan formatnya benar ya.");
+        setValidationError("Gagal proses gambar. Pastikan formatnya benar ya.");
     } finally {
       setIsLoading(false);
       if (event.target) {
@@ -180,8 +180,8 @@ export function BillSplitter() {
       if (!newItemName || quantity <= 0 || price <= 0) {
           toast({
               variant: "destructive",
-              title: "Data Item Belum Lengkap",
-              description: "Nama, Kuantitas, dan Harga harus diisi dengan benar.",
+              title: "Datanya Belum Komplit",
+              description: "Nama, Qty, sama Harga wajib diisi, cuy.",
           });
           return;
       }
@@ -199,8 +199,8 @@ export function BillSplitter() {
     if (manualItems.length === 0) {
         toast({
             variant: "destructive",
-            title: "Belum Ada Item",
-            description: "Tambahin dulu minimal satu item buat dihitung.",
+            title: "Itemnya Kosong, Bro",
+            description: "Tambahin dulu minimal satu item buat diitung.",
         });
         return;
     }
@@ -416,8 +416,8 @@ export function BillSplitter() {
          {!bill && (
              <Card>
                 <CardHeader>
-                  <CardTitle>1. Masukin Rincian Belanja</CardTitle>
-                  <CardDescription>Bisa scan struk otomatis atau input manual satu-satu.</CardDescription>
+                  <CardTitle>1. Masukin Detail Belanjaan</CardTitle>
+                  <CardDescription>Bisa scan struk otomatis atau ketik manual satu-satu, no ribet.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <Tabs defaultValue="scan" className="w-full">
@@ -429,7 +429,7 @@ export function BillSplitter() {
                               {isLoading ? (
                                 <div className="flex flex-col items-center justify-center gap-4 p-8">
                                   <Loader2 className="h-16 w-16 animate-spin text-primary" />
-                                  <p className="text-muted-foreground">Lagi nyeken struk, sabar ye...</p>
+                                  <p className="text-muted-foreground">Lagi nyeken struk, sabar ye, bestie...</p>
                                 </div>
                               ) : (
                                 <>
@@ -497,7 +497,7 @@ export function BillSplitter() {
           {receiptImage && (
             <Card>
               <CardHeader>
-                <CardTitle>Penampakan Struk</CardTitle>
+                <CardTitle>Penampakan Struknya</CardTitle>
               </CardHeader>
               <CardContent>
                 <img src={receiptImage} alt="Receipt preview" className="rounded-lg w-full" />
@@ -509,7 +509,7 @@ export function BillSplitter() {
             <Card>
               <CardHeader>
                 <CardTitle>Rincian Struk</CardTitle>
-                <CardDescription>Ini detail dari struk yang di-scan, cek lagi ya. Kalo ada yang salah, pencet tombol edit.</CardDescription>
+                <CardDescription>Ini hasil scan struknya, cek lagi ya. Kalau ada yang ngaco, tinggal edit aja.</CardDescription>
               </CardHeader>
               <CardContent>
                 <Dialog open={isEditing} onOpenChange={setIsEditing}>
@@ -565,8 +565,9 @@ export function BillSplitter() {
                   <TableFooter>
                     {bill.subtotal != null && bill.subtotal > 0 && (
                       <TableRow>
-                        <TableCell colSpan={3} className="p-2">Subtotal</TableCell>
+                        <TableCell colSpan={2} className="p-2">Subtotal</TableCell>
                         <TableCell className="text-right font-medium p-2 whitespace-nowrap">{formatRupiah(bill.subtotal)}</TableCell>
+                        <TableCell></TableCell>
                       </TableRow>
                     )}
                     {bill.tax != null && bill.tax > 0 && (
@@ -581,8 +582,9 @@ export function BillSplitter() {
                       </TableRow>
                     )}
                     <TableRow className="text-base">
-                      <TableCell colSpan={3} className="font-bold p-2">Total Belanja</TableCell>
+                      <TableCell colSpan={2} className="font-bold p-2">Total Belanja</TableCell>
                       <TableCell className="text-right font-bold p-2 whitespace-nowrap">{formatRupiah(bill.total)}</TableCell>
+                       <TableCell></TableCell>
                     </TableRow>
                   </TableFooter>
                 </Table>
@@ -595,15 +597,15 @@ export function BillSplitter() {
           {!bill ? (
             <Card className="flex flex-col items-center justify-center text-center p-8 h-full min-h-[300px] no-print">
                 <FileImage className="h-16 w-16 text-muted-foreground" />
-                <CardTitle className="mt-4">Hasilnya Nanti di Sini</CardTitle>
-                <CardDescription>Input data belanja dulu, ntar detail patungannya muncul di sini.</CardDescription>
+                <CardTitle className="mt-4">Hasilnya Nanti di Sini, Bestie</CardTitle>
+                <CardDescription className="mt-4">Input data belanja dulu, ntar detail totalannya muncul di sini, santuy.</CardDescription>
             </Card>
           ) : (
             <>
               <Card className="no-print">
                 <CardHeader>
-                  <CardTitle>2. Info Rekening (Opsional)</CardTitle>
-                  <CardDescription>Biar gampang, masukin info rekening buat transfer.</CardDescription>
+                  <CardTitle>2. Info Rekening (Opsional, tapi ngebantu)</CardTitle>
+                  <CardDescription>Biar temen lo gampang transfer, isi info rekening.</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-3">
                     <Input placeholder="Nama Bank (Contoh: BCA)" value={bankName} onChange={(e) => setBankName(e.target.value)} />
@@ -614,13 +616,13 @@ export function BillSplitter() {
 
               <Card className="no-print">
                 <CardHeader>
-                  <CardTitle>3. Tambah Temen</CardTitle>
-                  <CardDescription>Siapa aja nih yang ikut patungan?</CardDescription>
+                  <CardTitle>3. Siapa Aja yang Ikut?</CardTitle>
+                  <CardDescription>Tag temen-temen lo yang ikut patungan.</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex gap-2">
                     <Input
-                      placeholder="Nama bestie"
+                      placeholder="Nama bestie lo"
                       value={newParticipantName}
                       onChange={(e) => setNewParticipantName(e.target.value)}
                       onKeyDown={(e) => e.key === 'Enter' && addParticipant()}
@@ -642,7 +644,7 @@ export function BillSplitter() {
                           </Button>
                         </div>
                       ))}
-                      {participants.length === 0 && <p className="text-center text-sm text-muted-foreground pt-4">Belum ada temen, tambahin dulu gih.</p>}
+                      {participants.length === 0 && <p className="text-center text-sm text-muted-foreground pt-4">Kosong nih, tambahin temen lo dulu.</p>}
                     </div>
                   </ScrollArea>
                 </CardContent>
@@ -651,8 +653,8 @@ export function BillSplitter() {
               {areParticipantsAdded && (
                  <Card className="no-print">
                   <CardHeader>
-                    <CardTitle>4. Bagi-Bagi Item</CardTitle>
-                    <CardDescription>Pilih siapa mesen apa. Kalo rame-rame, centang "Semua".</CardDescription>
+                    <CardTitle>4. Siapa Makan Apa?</CardTitle>
+                    <CardDescription>Pilih siapa pesen apa. Kalau buat rame-rame, centang "Semua".</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <ScrollArea className="h-[40vh]">

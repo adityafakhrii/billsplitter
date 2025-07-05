@@ -40,8 +40,8 @@ export function BillSplitterResults({
     return (
         <Card className="printable-area">
             <CardHeader>
-                <CardTitle>5. Rincian Patungan</CardTitle>
-                <CardDescription className="no-print">Nih, totalan masing-masing. Cekidot!</CardDescription>
+                <CardTitle>5. Totalan Masing-Masing</CardTitle>
+                <CardDescription className="no-print">Nih, rinciannya. Cekidot!</CardDescription>
             </CardHeader>
             <CardContent>
                 {/* Bank Info for Print */}
@@ -101,7 +101,7 @@ export function BillSplitterResults({
                     <Button onClick={onExport} size="lg" variant="outline" className="w-full"><Printer className="mr-2" /> Export PDF</Button>
                 </div>
                 <Button onClick={onStartOver} size="lg" className="no-print">
-                    <Plus className="h-4 w-4 mr-2" /> Itung Bill Baru
+                    <Plus className="h-4 w-4 mr-2" /> Itung Lagi
                 </Button>
             </CardFooter>
         </Card>

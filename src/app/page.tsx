@@ -1,5 +1,7 @@
+
 import { AppHeader } from "@/components/app-header";
 import { BillSplitter } from "@/components/bill-splitter";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -10,9 +12,14 @@ export default function Home() {
       </main>
       <footer className="py-6 md:px-8 md:py-0">
         <div className="container flex flex-col items-center justify-center gap-4 md:h-24 md:flex-row">
-            <p className="text-center text-sm leading-loose text-muted-foreground">
-              Bagi-bagi bill anti-ribet, biar nongkrong makin asik.
-            </p>
+            <div className="flex flex-col items-center gap-2">
+              <p className="text-center text-sm leading-loose text-muted-foreground">
+                Bagi-bagi bill anti-ribet, biar nongkrong makin asik.
+              </p>
+              <Link href="/changelog" className="text-xs text-muted-foreground hover:underline">
+                Riwayat Update
+              </Link>
+            </div>
         </div>
       </footer>
     </div>
