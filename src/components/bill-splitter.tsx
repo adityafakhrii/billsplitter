@@ -46,6 +46,41 @@ const BillSplitterResults = dynamic(() =>
   }
 );
 
+const resizeImage = (file: File, maxWidth: number = 1024): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      const imgSrc = event.target?.result;
+      if (!imgSrc) {
+        return reject(new Error("Failed to read file."));
+      }
+      img.src = imgSrc as string;
+      img.onload = () => {
+        if (img.width <= maxWidth) {
+          resolve(img.src);
+          return;
+        }
+
+        const canvas = document.createElement('canvas');
+        const scale = maxWidth / img.width;
+        canvas.width = maxWidth;
+        canvas.height = img.height * scale;
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          return reject(new Error("Could not get canvas context"));
+        }
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL('image/jpeg', 0.85));
+      };
+      img.onerror = (err) => reject(err);
+    };
+    reader.onerror = (err) => reject(err);
+  });
+};
+
 
 export function BillSplitter() {
   const [bill, setBill] = useState<Bill | null>(null);
@@ -89,22 +124,16 @@ export function BillSplitter() {
     setBill(null);
     setValidationError(null);
 
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = async () => {
-      const base64 = reader.result as string;
-
-      // 1. Validate if it's a receipt first
+    try {
+      const base64 = await resizeImage(file);
+      
       const validationResult = await validateReceiptPhotoAction(base64);
 
       if (validationResult.error || !validationResult.data?.isReceipt) {
         setValidationError(validationResult.data?.reason || validationResult.error || "Coba upload foto struk yang bener, ya.");
-        setIsLoading(false);
-        if (event.target) event.target.value = "";
-        return; // Stop processing
+        return;
       }
       
-      // 2. If valid, proceed to extract items
       setReceiptImage(base64);
       const result = await processReceipt(base64);
 
@@ -130,10 +159,20 @@ export function BillSplitter() {
         };
         setBill(billData);
       }
+    } catch (error) {
+       console.error("Error processing image:", error);
+        toast({
+            variant: "destructive",
+            title: "Oops, Gagal Proses!",
+            description: "Gagal memproses gambar. Coba foto ulang atau pilih dari galeri.",
+        });
+        setValidationError("Gagal memproses gambar. Pastikan formatnya benar ya.");
+    } finally {
       setIsLoading(false);
-    };
-
-    if (event.target) event.target.value = "";
+      if (event.target) {
+          event.target.value = "";
+      }
+    }
   };
   
   const addParticipant = () => {
@@ -412,10 +451,10 @@ export function BillSplitter() {
                 <Table>
                   <TableHeader>
                     <TableRow>
-                      <TableHead className="px-2 py-3 w-full">Item</TableHead>
-                      <TableHead className="text-center px-1 py-3 w-[40px]">Qty</TableHead>
-                      <TableHead className="text-right px-2 py-3 w-[90px]">Harga</TableHead>
-                      <TableHead className="text-center px-1 py-3 w-[40px]">Edit</TableHead>
+                      <TableHead className="p-2 md:px-2 md:py-3 w-full">Item</TableHead>
+                      <TableHead className="text-center p-1 md:px-1 md:py-3 w-[40px]">Qty</TableHead>
+                      <TableHead className="text-right p-2 md:px-2 md:py-3 w-[90px]">Harga</TableHead>
+                      <TableHead className="text-center p-1 md:px-1 md:py-3 w-[40px]">Edit</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>

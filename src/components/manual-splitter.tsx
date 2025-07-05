@@ -23,6 +23,41 @@ const ManualSplitterResults = dynamic(() =>
     }
 );
 
+const resizeImage = (file: File, maxWidth: number = 1024): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => {
+      const img = new Image();
+      const imgSrc = event.target?.result;
+      if (!imgSrc) {
+        return reject(new Error("Failed to read file."));
+      }
+      img.src = imgSrc as string;
+      img.onload = () => {
+        if (img.width <= maxWidth) {
+          resolve(img.src);
+          return;
+        }
+
+        const canvas = document.createElement('canvas');
+        const scale = maxWidth / img.width;
+        canvas.width = maxWidth;
+        canvas.height = img.height * scale;
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          return reject(new Error("Could not get canvas context"));
+        }
+        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL('image/jpeg', 0.85));
+      };
+      img.onerror = (err) => reject(err);
+    };
+    reader.onerror = (err) => reject(err);
+  });
+};
+
 
 export function ManualSplitter() {
   const [items, setItems] = useState<ManualItem[]>([]);
@@ -85,10 +120,8 @@ export function ManualSplitter() {
     setPhotoValidationError(null);
     setIsPhotoValidating(true);
 
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = async () => {
-        const base64 = reader.result as string;
+    try {
+        const base64 = await resizeImage(file);
         const result = await validateProofPhotoAction(base64);
         if (result.error || !result.data) {
             setPhotoValidationError(result.error || "Gagal validasi foto.");
@@ -99,9 +132,20 @@ export function ManualSplitter() {
         } else {
             setProofPhoto(base64);
         }
-        setIsPhotoValidating(false);
+    } catch (error) {
+       console.error("Error processing proof photo:", error);
+        toast({
+            variant: "destructive",
+            title: "Oops, Gagal Proses!",
+            description: "Gagal memproses gambar. Coba foto ulang atau pilih dari galeri.",
+        });
+        setPhotoValidationError("Gagal memproses gambar. Pastikan formatnya benar ya.");
+    } finally {
+      setIsPhotoValidating(false);
+      if (e.target) {
+        e.target.value = "";
+      }
     }
-    if (e.target) e.target.value = "";
   }
 
   const handleSubmitItems = () => {
