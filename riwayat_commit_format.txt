@@ -1,0 +1,42 @@
+b7ece72 - Aditya Fakhri Riansyah, 3 minutes ago : di input manual di bagian halaman bagi per item, untuk input item itu bu
+cdb9a4b - Aditya Fakhri Riansyah, 11 minutes ago : di bagian input manual di halaman bagi per item, sebelum klik proses dan
+1dd0de1 - Aditya Fakhri Riansyah, 15 minutes ago : di halaman bagi per item di bagian input manual, harusnya bisa tekan ent
+799b7c4 - Aditya Fakhri Riansyah, 19 minutes ago : ketika dark mode aktif, peringatan untuk gambar struk yang salah ini kok
+cee40d1 - Aditya Fakhri Riansyah, 25 minutes ago : tulisan antara 'Hasilnya Nanti di Sini' dan 'Input data belanja dulu, nt
+50af0dd - Aditya Fakhri Riansyah, 35 minutes ago : di input manual, bagian qty jangan ada angka 1, tapi kosongkan saja biar
+e20ee32 - Aditya Fakhri Riansyah, 39 minutes ago : tambahin satu fitur lagi di halaman scan struk/upload struk, selain uplo
+796bc31 - Aditya Fakhri Riansyah, 61 minutes ago : fitur 'pake kamera' ketika saya coba di browser mobile langsung mengguna
+553dcc2 - Aditya Fakhri Riansyah, 67 minutes ago : di ukuran layar hp, rincian struk dan subtotal, pajak, total belanja ini
+d806d46 - Aditya Fakhri Riansyah, 2 days ago : update readme: remove emoji icon
+b3a9032 - Aditya Fakhri Riansyah, 3 days ago : Update readme.md
+35a0a4b - Aditya Fakhri Riansyah, 3 days ago : button export PDF pada manual masih overflow nih di ukuran layar hp, cob
+dbc8fe2 - Aditya Fakhri Riansyah, 3 days ago : first commit
+c19ad57 - Aditya Fakhri Riansyah, 3 days ago : first commit
+ab82a99 - Aditya Fakhri Riansyah, 3 days ago : coba dioptimisasi lagi, minimal performance 80 deh
+df99cb6 - Aditya Fakhri Riansyah, 3 days ago : ada masalah ini juga
+6ccdb74 - Aditya Fakhri Riansyah, 3 days ago : coba perbaiki masalah ini
+2be0e25 - Aditya Fakhri Riansyah, 3 days ago : Tulisan judul "PatunganYuk" harusnya bisa di klik menuju ke index '/' da
+c3d7d87 - Aditya Fakhri Riansyah, 3 days ago : oke sekarang di menu scan struk dan ganti tema nya pake hover curson:poi
+461d820 - Aditya Fakhri Riansyah, 3 days ago : posisi icon pada 'ganti tema' harusnya icon dark mode di kiri tulisan ja
+a29443d - Aditya Fakhri Riansyah, 3 days ago : I see this error with the app, reported by NextJS, please fix it. The er
+e816129 - Aditya Fakhri Riansyah, 3 days ago : untuk responsive untuk ukuran layar hp masih overflow, jadi harus geser
+abe2e50 - Aditya Fakhri Riansyah, 3 days ago : untuk qty di halaman input manual, dikosongkan saja jangan ada default v
+8017a62 - Aditya Fakhri Riansyah, 3 days ago : masih ada bug nih, ketika di struk 10,000 malah terbaca 10 karena mengan
+eca3b38 - Aditya Fakhri Riansyah, 3 days ago : Kalau di struk tidak ada pajak/ppn/pb1 maka tidak perlu dijumlahkan atau
+5d4a336 - Aditya Fakhri Riansyah, 3 days ago : coba peringatannya jangan pake toast/alert, tapi pake alert langsung aja
+7b54b5e - Aditya Fakhri Riansyah, 3 days ago : upload struk harus divalidasi dulu kalau itu beneran gambar struk bukan
+33ed64f - Aditya Fakhri Riansyah, 3 days ago : Di bagian scan/upload struk: di menu scan/upload struk tambahkan input n
+e124c29 - Aditya Fakhri Riansyah, 3 days ago : buatkan 1 menu tambahan beda halaman yang dimana tetap pertahankan nilai
+3c72b74 - Aditya Fakhri Riansyah, 3 days ago : antehan hapus dalam pajak, lalu hapus angka dibelakang koma jangan menam
+f11f12e - Aditya Fakhri Riansyah, 3 days ago : buatkan function untuk mengubah format mata uang menjadi rupiah (jika ad
+1b1fcd6 - Aditya Fakhri Riansyah, 3 days ago : aturan penulisan rupiah bisa ditulis sebagai "Rp" tanpa tanda titik. Tan
+6346aa8 - Aditya Fakhri Riansyah, 3 days ago : Rp 31,365 Rp 10,455 Rp 10,455 Rp 19,092 Rp 8,637... harusnya 80,004
+4e99afc - Aditya Fakhri Riansyah, 3 days ago : totalnya dijumlahin dari harga coba, tapi dibatasin 3 angka aja dibelaka
+a76d084 - Aditya Fakhri Riansyah, 3 days ago : fix subtotal ambil dari struk juga, jangan dijumlahkan dari total item.
+8cc2320 - Aditya Fakhri Riansyah, 4 days ago : pake titik misalnya 88.000 bukan 88,000... yang sekarang masih pake koma
+2313ece - Aditya Fakhri Riansyah, 4 days ago : subtotal jumlahin aja dari harga, itu pemisahannya masih pakai koma tuh,
+25813ad - Aditya Fakhri Riansyah, 4 days ago : masih dibuletin kocak... harusnya enggak.. misal itu harganya 31.365 mal
+2ed8b2e - Aditya Fakhri Riansyah, 4 days ago : nominal harga jangan ada dibulatkan, tulis aja semuanya full
+2649838 - Aditya Fakhri Riansyah, 4 days ago : tombol ceklis all jangan ke ceklis jika semuanya tidak terceklis, lalu g
+816d52c - Aditya Fakhri Riansyah, 4 days ago : I see this error with the app, reported by NextJS, please fix it. The er
+3696b98 - Your Name, 10 days ago : initial scaffold

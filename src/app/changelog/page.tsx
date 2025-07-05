@@ -7,30 +7,48 @@ import Link from "next/link";
 export default function ChangelogPage() {
   const updates = [
     {
-      version: "v1.2.0",
-      date: "Jumat, 26 Juli 2024",
+      version: "v1.4.0",
+      date: "Sabtu, 06 Juli 2025",
       changes: [
-        "Re-write semua copywriting biar lebih Gen Z dan asik.",
-        "Nambahin halaman changelog (yang lagi lo liat sekarang).",
-        "Perbaikan layout di halaman Kalkulator Patungan.",
+        "Input Manual Makin Pro: Sekarang masukinnya harga satuan, bukan total. Biar makin detail & akurat!",
+        "Fitur Pajak di Input Manual: Mau nambahin pajak 10%? Centang aja, kelar.",
+        "'Enter' Jadi Shortcut: Gak perlu klik tombol lagi, `Enter` aja buat nambah item. Sat set!",
       ],
     },
     {
-        version: "v1.1.0",
-        date: "Kamis, 25 Juli 2024",
-        changes: [
-          "Nambahin mode 'Input Manual' di halaman utama (Bagi per Item).",
-          "Nambahin mode 'Scan Struk' di halaman Kalkulator Patungan.",
-          "Benerin bug loading kamera yang gak kelar-kelar di mobile.",
-          "Benerin layout tabel Rincian Struk biar gak geser-geser di HP."
-        ],
+      version: "v1.3.0",
+      date: "Sabtu, 06 Juli 2025",
+      changes: [
+          "Dark Mode Makin Jelas: Alert merah sekarang terang benderang, gak bakal kelewat lagi.",
+          "Copywriting Makeover: Semua tulisan di-update jadi lebih Gen Z & asik.",
+          "Layout Makin Rapi: Tab di 'Kalkulator Patungan' udah bener posisinya & Qty defaultnya kosong.",
+      ],
+    },
+    {
+      version: "v1.2.0",
+      date: "Sabtu, 06 Juli 2025",
+      changes: [
+          "REVOLUSI UI/UX: Sekarang ada tab 'Input Manual' di halaman utama & 'Scan Struk' di Kalkulator Patungan. Super fleksibel!",
+          "Fix Bug Kamera HP: Foto struk dari kamera sekarang anti-lemot, langsung ke-scan!",
+          "Tabel Anti-Geser: Rincian struk di HP sekarang pas di layar, gak perlu scroll kanan-kiri.",
+      ],
+    },
+    {
+      version: "v1.1.0",
+      date: "Rabu, 03 Juli 2025",
+      changes: [
+        "Performa NGEBUT: Aplikasi di-tuning, loading-nya sekarang lebih cepet dari pesenan dateng. Skor performa naik drastis!",
+        "Fix Tampilan di HP: Tombol-tombol gak bakal nabrak-nabrak lagi di layar kecil.",
+        "Dokumentasi (README) di-update biar makin informatif.",
+      ],
     },
     {
       version: "v1.0.0",
-      date: "Rabu, 24 Juli 2024",
+      date: "Senin, 01 Juli 2025",
       changes: [
-        "Peluncuran perdana aplikasi PatunganYuk!",
-        "Fitur utama: Scan Struk & Bagi per Item, Kalkulator Patungan.",
+        "LAHIRNYA PATUNGANYUK! 🎉 Peluncuran perdana aplikasi pembagi bill paling sat set.",
+        "Fitur Awal: Scan Struk AI, Bagi per Item, Kalkulator Patungan, Validasi Struk Cerdas.",
+        "Banyak perbaikan awal buat kalkulasi, format Rupiah, dan tampilan biar makin stabil.",
       ],
     },
   ];
