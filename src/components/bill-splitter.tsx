@@ -329,25 +329,34 @@ export function BillSplitter() {
 
   const handleShare = async () => {
     if (!bill || !navigator.share) {
-      toast({
-        variant: "destructive",
-        title: "Gagal Share",
-        description: "Browser lo ga support fitur ini, bestie.",
-      });
-      return;
+        toast({
+            variant: "destructive",
+            title: "Gagal Share",
+            description: "Browser lo ga support fitur ini, bestie.",
+        });
+        return;
     }
-    
+
     let shareText = `PatunganYuk! Total Tagihan: ${formatRupiah(bill.total)}\n\n`;
 
     billResults.forEach(result => {
         const p = participants.find(p => p.id === result.participantId);
-        if(p) {
-            shareText += `🤑 ${p.name} bayar: ${formatRupiah(result.total)}\n`
+        if (p) {
+            shareText += `🤑 ${p.name} bayar: ${formatRupiah(result.total)}\n`;
+            
+            result.items.forEach(item => {
+                shareText += `  - ${item.name} (patungan): ${formatRupiah(item.splitPrice)}\n`;
+            });
+
+            if (result.taxShare > 0) {
+                shareText += `  - Pajak: ${formatRupiah(result.taxShare)}\n`;
+            }
+            shareText += "\n";
         }
     });
 
-    if(accountName && accountNumber && bankName) {
-        shareText += `\nTransfer ke:\nBank: ${bankName}\nNo. Rek: ${accountNumber}\na.n. ${accountName}\n\n`;
+    if (accountName && accountNumber && bankName) {
+        shareText += `Transfer ke:\nBank: ${bankName}\nNo. Rek: ${accountNumber}\na.n. ${accountName}\n\n`;
     }
 
     shareText += "Dibikin pake PatunganYuk! ✨";
