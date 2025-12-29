@@ -2,10 +2,18 @@
 import { AppHeader } from "@/components/app-header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
 
 export default function ChangelogPage() {
   const updates = [
+    {
+      version: "v1.3.0",
+      date: "Senin, 29 Desember 2025",
+      changes: [
+        "Fix Validasi Struk: AI gak 'pusing' lagi, model diganti ke versi stabil biar makin sat set.",
+        "Logo Baru: Facelift tampilan dengan logo & favicon baru yang lebih fresh.",
+        "Perbaikan Bug: Berbagai minor fix biar aplikasi makin lancar jaya.",
+      ],
+    },
     {
       version: "v1.2.0",
       date: "Sabtu, 06 Juli 2025",
@@ -44,37 +52,37 @@ export default function ChangelogPage() {
       <AppHeader />
       <main className="flex-1 container mx-auto p-4 md:py-8">
         <div className="max-w-4xl mx-auto">
-            <h1 className="text-4xl font-bold tracking-tight mb-2">Riwayat Update</h1>
-            <p className="text-lg text-muted-foreground mb-8">
-              Perkembangan terbaru dari aplikasi PatunganYuk. Biar lo gak ketinggalan info!
-            </p>
+          <h1 className="text-4xl font-bold tracking-tight mb-2">Riwayat Update</h1>
+          <p className="text-lg text-muted-foreground mb-8">
+            Perkembangan terbaru dari aplikasi PatunganYuk. Biar lo gak ketinggalan info!
+          </p>
 
-            <div className="space-y-8">
-                {updates.map((update) => (
-                    <Card key={update.version}>
-                        <CardHeader>
-                            <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 space-y-2 sm:space-y-0">
-                                <Badge variant="outline" className="w-fit">{update.version}</Badge>
-                                <CardTitle className="text-xl sm:text-2xl">{update.date}</CardTitle>
-                            </div>
-                        </CardHeader>
-                        <CardContent>
-                            <ul className="list-disc list-inside space-y-2 text-muted-foreground">
-                                {update.changes.map((change, index) => (
-                                    <li key={index}>{change}</li>
-                                ))}
-                            </ul>
-                        </CardContent>
-                    </Card>
-                ))}
-            </div>
+          <div className="space-y-8">
+            {updates.map((update) => (
+              <Card key={update.version}>
+                <CardHeader>
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:gap-4 space-y-2 sm:space-y-0">
+                    <Badge variant="outline" className="w-fit">{update.version}</Badge>
+                    <CardTitle className="text-xl sm:text-2xl">{update.date}</CardTitle>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <ul className="list-disc list-inside space-y-2 text-muted-foreground">
+                    {update.changes.map((change, index) => (
+                      <li key={index}>{change}</li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
       </main>
       <footer className="py-6 md:px-8 md:py-0">
         <div className="container flex flex-col items-center justify-center gap-4 md:h-24 md:flex-row">
-            <p className="text-center text-sm leading-loose text-muted-foreground">
-                © {new Date().getFullYear()} PatunganYuk v1.2.0. Dibuat biar nongkrong makin asik.
-            </p>
+          <p className="text-center text-sm leading-loose text-muted-foreground">
+            © {new Date().getFullYear()} PatunganYuk v1.2.0. Dibuat biar nongkrong makin asik.
+          </p>
         </div>
       </footer>
     </div>

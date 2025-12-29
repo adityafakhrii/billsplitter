@@ -1,4 +1,4 @@
-import type {Metadata} from 'next';
+import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { Inter } from 'next/font/google';
@@ -12,6 +12,10 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'PatunganYuk',
   description: 'Aplikasi cerdas buat patungan bill sama bestie.',
+  icons: {
+    icon: '/logo.png',
+    apple: '/logo.png',
+  },
 };
 
 const themeScript = `

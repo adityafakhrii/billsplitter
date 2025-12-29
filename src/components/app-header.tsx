@@ -2,10 +2,11 @@
 "use client";
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
 import { ThemeToggle } from "@/components/theme-toggle";
-import { ReceiptText, Pencil, MoreVertical, ScanLine, Moon, Sun, Calculator } from "lucide-react";
+import { Pencil, MoreVertical, ScanLine, Moon, Sun, Calculator } from "lucide-react";
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -28,7 +29,7 @@ export function AppHeader() {
     const initialTheme = (savedTheme as "light" | "dark") || (systemPrefersDark ? "dark" : "light");
     setTheme(initialTheme);
   }, []);
-  
+
   useEffect(() => {
     // This effect runs whenever the theme state changes to update the DOM and localStorage.
     if (theme) {
@@ -83,7 +84,7 @@ export function AppHeader() {
     <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center gap-2 cursor-pointer">
-          <ReceiptText className="h-6 w-6 text-primary" />
+          <Image src="/logo.png" alt="PatunganYuk Logo" width={32} height={32} className="h-8 w-8 object-contain" />
           <h1 className="text-2xl font-bold">
             <span className="text-primary">Patungan</span>Yuk
           </h1>
@@ -107,8 +108,8 @@ export function AppHeader() {
               <DropdownMenuContent align="end">
                 {mobileLink}
                 <DropdownMenuItem onSelect={(e) => { e.preventDefault(); toggleTheme(); }}>
-                   {theme === 'dark' ? <Sun className="mr-2 h-4 w-4" /> : <Moon className="mr-2 h-4 w-4" />}
-                   <span>Ganti Tema</span>
+                  {theme === 'dark' ? <Sun className="mr-2 h-4 w-4" /> : <Moon className="mr-2 h-4 w-4" />}
+                  <span>Ganti Tema</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
